@@ -7,7 +7,7 @@
 * /assets/arcade/_Arcade
 * /assets/arcade/command.dat
 
-## To Generate Site:
+## To Generate Site: 
 ```shell
 go run *.go
 ```
