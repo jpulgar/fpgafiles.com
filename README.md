@@ -8,6 +8,6 @@
 * /assets/arcade/command.dat
 
 ## To Generate Site:
-```
+```shell
 go run *.go
 ```
