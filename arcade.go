@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"os"
 	"sort"
+	"strconv"
 	"strings"
 )
 
@@ -50,6 +51,7 @@ type ArcadeGamePageData struct {
 	Year   string
 	Author string
 	Moves  template.HTML
+	Video  string
 }
 
 func generateMisterArcadeGames() {
@@ -59,7 +61,7 @@ func generateMisterArcadeGames() {
 	generateMisterArcadeHTML()
 	CopyArcadeScripts()
 	copyArcadeImages()
-	// fmt.Println(arcadeSets)
+	//fmt.Println(arcadeSets)
 	//fmt.Println(moveList["mk3"])
 }
 
@@ -82,7 +84,7 @@ func generateMisterArcadeHTML() {
 
 	var tmplBuffer bytes.Buffer
 
-	// Generate index.html and jotego.html
+	// Generate index.html
 	data := IndexPageData{
 		Alphabet1: []string{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"},
 		Alphabet2: []string{"K", "L", "M", "N", "O", "P", "Q", "R"},
@@ -110,12 +112,16 @@ func generateMisterArcadeHTML() {
 
 	// Generate Arcade Games
 	for _, v := range arcadeSets {
+
+		arcadeVideo := arcadeVideos[v]
+
 		dataGames := ArcadeGamePageData{
 			ID:     v,
 			Name:   arcadeGameInfo[v].Name,
 			Year:   arcadeGameInfo[v].Year,
 			Author: arcadeGameInfo[v].Author,
 			Moves:  template.HTML(moveList[v]),
+			Video:  arcadeVideo,
 		}
 		tmpl = template.Must(template.ParseFiles("mister/arcade/arcade_layout.html", "navigation.html"))
 		if err := tmpl.Execute(&tmplBuffer, dataGames); err != nil {
@@ -151,6 +157,72 @@ func generateMisterArcadeNamesJSON() {
 		}
 	}
 
+	// Calculate Best Video Matches
+	var distZero = 0
+	var distOne = 0
+	var distTwo = 0
+	var distThree = 0
+	var distFour = 0
+	var distFive = 0
+	var distMoreThanFive = 0
+	for i := range arcadeGameInfo {
+		// Only do this process for titles with no video
+		if arcadeVideos[arcadeGameInfo[i].SetName] == "" {
+			tempName := arcadeGameInfo[i].Name
+			if idx := strings.IndexByte(tempName, '('); idx >= 0 {
+				tempName = strings.TrimRight(tempName[:idx], " ")
+			}
+			var str1 = []rune(tempName)
+			var lowestDistance = 99
+			var lowestName = ""
+			for _, n := range arcadeLongplays {
+				temptemp := n[:strings.IndexByte(n, '|')]
+				var str2 = []rune(temptemp)
+				var tempDistance = levenshtein(str1, str2)
+				if tempDistance < lowestDistance {
+					lowestDistance = tempDistance
+					lowestName = n //temptemp
+				}
+			}
+			if lowestDistance == 0 {
+				distZero = distZero + 1
+			}
+			if lowestDistance == 1 {
+				distOne = distOne + 1
+			}
+			if lowestDistance == 2 {
+				distTwo = distTwo + 1
+			}
+			if lowestDistance == 3 {
+				distThree = distThree + 1
+			}
+			if lowestDistance == 4 {
+				distFour = distFour + 1
+			}
+			if lowestDistance == 5 {
+				distFive = distFive + 1
+			}
+			if lowestDistance > 5 {
+				distMoreThanFive = distMoreThanFive + 1
+			}
+			if lowestDistance < 3 {
+				// For Checking the list:
+				fmt.Println(tempName + " === " + lowestName)
+				// will give final input for arcade_videos.go
+				//fmt.Println("	\"" + arcadeGameInfo[i].SetName + "\" : \"" + lowestName[len(lowestName)-11:] + "\",")
+			}
+		}
+	}
+	// Reporting
+	fmt.Println("Distance 0: " + strconv.Itoa(distZero))
+	fmt.Println("Distance 1: " + strconv.Itoa(distOne))
+	fmt.Println("Distance 2: " + strconv.Itoa(distTwo))
+	fmt.Println("Distance 3: " + strconv.Itoa(distThree))
+	fmt.Println("Distance 4: " + strconv.Itoa(distFour))
+	fmt.Println("Distance 5: " + strconv.Itoa(distFive))
+	fmt.Println("Distance 5+: " + strconv.Itoa(distMoreThanFive))
+
+	// Sort entries
 	sort.Slice(entries, func(i, j int) bool {
 		return entries[i].Name < entries[j].Name
 	})
