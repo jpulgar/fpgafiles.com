@@ -205,9 +205,10 @@ func generateMisterArcadeNamesJSON() {
 			if lowestDistance > 5 {
 				distMoreThanFive = distMoreThanFive + 1
 			}
-			if lowestDistance < 3 {
+			if lowestDistance < 5 {
 				// For Checking the list:
-				fmt.Println(tempName + " === " + lowestName)
+				fmt.Println(tempName + "[" + arcadeGameInfo[i].SetName + "] === " + lowestName)
+
 				// will give final input for arcade_videos.go
 				//fmt.Println("	\"" + arcadeGameInfo[i].SetName + "\" : \"" + lowestName[len(lowestName)-11:] + "\",")
 			}
@@ -364,13 +365,17 @@ func copyArcadeImages() {
 			fmt.Println(err)
 		} else {
 			fi, err := os.Stat("public/mister/arcade/snaps/" + v + ".png")
-			if sourceSize != fi.Size() {
+			if os.IsNotExist(err) {
 				fmt.Println("Copying assets/arcade/snaps/" + v + ".png")
-				if os.IsNotExist(err) {
-					copyErr := CopyFile("assets/arcade/snaps/"+v+".png", "public/mister/arcade/snaps/"+v+".png")
-					if copyErr != nil {
-						fmt.Println(copyErr)
-					}
+				copyErr := CopyFile("assets/arcade/snaps/"+v+".png", "public/mister/arcade/snaps/"+v+".png")
+				if copyErr != nil {
+					fmt.Println(copyErr)
+				}
+			} else if sourceSize != fi.Size() {
+				fmt.Println("Copying assets/arcade/snaps/" + v + ".png")
+				copyErr := CopyFile("assets/arcade/snaps/"+v+".png", "public/mister/arcade/snaps/"+v+".png")
+				if copyErr != nil {
+					fmt.Println(copyErr)
 				}
 			}
 		}
@@ -381,13 +386,17 @@ func copyArcadeImages() {
 			fmt.Println(err)
 		} else {
 			fi, err := os.Stat("public/mister/arcade/titles/" + v + ".png")
-			if sourceSize != fi.Size() {
+			if os.IsNotExist(err) {
 				fmt.Println("Copying assets/arcade/titles/" + v + ".png")
-				if os.IsNotExist(err) {
-					copyErr := CopyFile("assets/arcade/titles/"+v+".png", "public/mister/arcade/titles/"+v+".png")
-					if copyErr != nil {
-						fmt.Println(copyErr)
-					}
+				copyErr := CopyFile("assets/arcade/titles/"+v+".png", "public/mister/arcade/titles/"+v+".png")
+				if copyErr != nil {
+					fmt.Println(copyErr)
+				}
+			} else if sourceSize != fi.Size() {
+				fmt.Println("Copying assets/arcade/titles/" + v + ".png")
+				copyErr := CopyFile("assets/arcade/titles/"+v+".png", "public/mister/arcade/titles/"+v+".png")
+				if copyErr != nil {
+					fmt.Println(copyErr)
 				}
 			}
 		}
