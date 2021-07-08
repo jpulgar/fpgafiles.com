@@ -146,6 +146,10 @@ func generateMisterArcadeNamesJSON() {
 			if out.RBF != "" {
 				out.SetName = out.RBF
 			}
+			// MRA fixes
+			if out.Name == "Clean Sweep" {
+				out.SetName = "cleanswp"
+			}
 		}
 		entry := Entry{Name: out.Name, SetName: out.SetName, Year: out.Year, Author: out.About.Author}
 		// Remove duplicates
@@ -234,6 +238,7 @@ func generateMisterArcadeNamesJSON() {
 		return
 	}
 	WriteToFile("mister/arcade/name.json", string(prettyJSON))
+	WriteToFile("public/mister/arcade/name.json", string(prettyJSON))
 }
 
 func generateMisterArcadeCommands() {

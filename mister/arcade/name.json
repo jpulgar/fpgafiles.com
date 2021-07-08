@@ -374,7 +374,7 @@
     {
         "name": "Clean Sweep",
         "year": "1974",
-        "setname": "galaxian",
+        "setname": "cleanswp",
         "author": ""
     },
     {
@@ -724,6 +724,12 @@
         "year": "1984",
         "setname": "galaga3",
         "author": "MrX-8B"
+    },
+    {
+        "name": "Galaxian",
+        "year": "1979",
+        "setname": "galaxian",
+        "author": ""
     },
     {
         "name": "Galaxy Wars",
