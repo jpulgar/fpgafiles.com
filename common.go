@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 func findAllFiles(root, ext string, skip string) []string {
@@ -21,6 +22,25 @@ func findAllFiles(root, ext string, skip string) []string {
 			}
 		}
 		if filepath.Ext(d.Name()) == ext {
+			a = append(a, s)
+		}
+		return nil
+	})
+	return a
+}
+
+func findAllSubstringFiles(root, ext string, skip string) []string {
+	var a []string
+	filepath.WalkDir(root, func(s string, d fs.DirEntry, e error) error {
+		if e != nil {
+			return e
+		}
+		if d.IsDir() {
+			if d.Name() == skip {
+				return filepath.SkipDir
+			}
+		}
+		if strings.Contains(d.Name(), ext) {
 			a = append(a, s)
 		}
 		return nil

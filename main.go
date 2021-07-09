@@ -12,9 +12,10 @@ type HomePageData struct {
 }
 
 func main() {
-	CopyHomepageFiles()
-	generateHomepageHTML()
-	generateMisterArcadeGames()
+	// CopyHomepageFiles()
+	// generateHomepageHTML()
+	// generateMisterArcadeGames()
+	generateMisterNESGames()
 }
 
 func CopyHomepageFiles() {
