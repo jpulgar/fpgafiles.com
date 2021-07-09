@@ -36,7 +36,7 @@ func generateHomepageHTML() {
 
 	now := time.Now()
 	dataHomepage := HomePageData{
-		UpdatedOn: now.Format(time.RFC1123),
+		UpdatedOn: now.Format("Monday, January 06, 2006 @ 3:04PM MST"),
 	}
 	tmpl := template.Must(template.ParseFiles("index_layout.html", "navigation.html"))
 	if err := tmpl.Execute(&tmplBuffer, dataHomepage); err != nil {
