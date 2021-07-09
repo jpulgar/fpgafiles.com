@@ -154,18 +154,18 @@ func generateMisterNESNamesJSON() {
 		if lowestDistance > 5 {
 			distMoreThanFive = distMoreThanFive + 1
 		}
-		if lowestDistance <= 2 {
-			// For Checking the list:
-			if true {
-				lowestName = lowestName[strings.IndexByte(lowestName, '|'):]
-				fmt.Println("\"" + v + "\": \"" + lowestName + "\",")
-			}
+
+		// List already contains <= 2
+		// Now let's do == 3, etc
+		if lowestDistance == 3 {
+
 			// TODO: Only fix these
-			// if strings.Contains(nesimages[v], "USA") {
-			// 	if !strings.Contains(nesimages[v], "(Unl)") {
-			// 		fmt.Println(v)
-			// 	}
-			// }
+			if strings.Contains(nesimages[v], "USA") {
+				if !strings.Contains(nesimages[v], "(Unl)") {
+					lowestName = lowestName[strings.IndexByte(lowestName, '|'):]
+					fmt.Println("\"" + v + "\": \"" + lowestName + "\",")
+				}
+			}
 
 		}
 		//}
