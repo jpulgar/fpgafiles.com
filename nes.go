@@ -157,6 +157,7 @@ func generateMisterNESNamesJSON() {
 		if lowestDistance <= 2 {
 			// For Checking the list:
 			if true {
+				lowestName = lowestName[strings.IndexByte(lowestName, '|'):]
 				fmt.Println("\"" + v + "\": \"" + lowestName + "\",")
 			}
 			// TODO: Only fix these
