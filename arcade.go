@@ -102,14 +102,6 @@ func generateMisterArcadeHTML() {
 	WriteToFile("public/mister/arcade/index.html", tmplBuffer.String())
 	tmplBuffer.Reset()
 
-	// Generate Where to Buy
-	tmpl = template.Must(template.ParseFiles("mister/where-to-buy_layout.html", "navigation.html"))
-	if err := tmpl.Execute(&tmplBuffer, nil); err != nil {
-		fmt.Println(err)
-	}
-	WriteToFile("public/mister/where-to-buy.html", tmplBuffer.String())
-	tmplBuffer.Reset()
-
 	// Generate Arcade Games
 	for _, v := range arcadeSets {
 

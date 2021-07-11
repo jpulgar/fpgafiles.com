@@ -75,7 +75,7 @@ func generateMisterNESHTML() {
 	var tmplBuffer bytes.Buffer
 
 	// Generate NES Games
-	if false {
+	if true {
 		for _, v := range uniquenesnames {
 
 			nesVideo := nesVideos[v]
