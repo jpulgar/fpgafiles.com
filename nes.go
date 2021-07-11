@@ -4,21 +4,13 @@ import (
 	"bytes"
 	"fmt"
 	"html/template"
+	"strconv"
 	"strings"
 )
-
-// var arcadeSets []string
-//var nesGameInfo = make(map[string]NESEntry)
 
 var nesnames = make(map[string]bool)
 var nesimages = make(map[string]string)
 var uniquenesnames []string
-
-// JSON Structure
-// type NESEntry struct {
-// 	Name  string `json:"name"`
-// 	Image string `json:"image"`
-// }
 
 type NESListPageData struct {
 	Sections    []Section
@@ -76,51 +68,6 @@ func generateMisterNESNamesJSON() {
 			}
 		}
 	}
-
-	for _, v := range uniquenesnames {
-
-		if false {
-			// fmt.Println(v + " --> " + nesimages[v]) // Show All
-			fmt.Println(urlSafe(v)) // Show All
-		}
-
-		// if strings.Contains(nesimages[v], "USA") { // Show USA released games
-		// 	fmt.Println(v + " --> " + nesimages[v])
-		// }
-		// if strings.Contains(nesimages[v], "(Unl)") { // Show Unlicensed only
-		// 	fmt.Println(v + " --> " + nesimages[v])
-		// }
-		// if strings.Contains(nesimages[v], "(Australia)") { // Show Australia only
-		// 	fmt.Println(v + " --> " + nesimages[v])
-		// }
-		// if strings.Contains(nesimages[v], "(Asia)") { // Show Asia only
-		// 	fmt.Println(v + " --> " + nesimages[v])
-		// }
-		// if strings.Contains(nesimages[v], "(Korea)") { // Show Korea only
-		// 	fmt.Println(v + " --> " + nesimages[v])
-		// }
-		// if strings.Contains(nesimages[v], "(Europe)") { // Show Europe only
-		// 	fmt.Println(v + " --> " + nesimages[v])
-		// }
-		// if strings.Contains(nesimages[v], "(Japan)") { // Show Europe only
-		// 	fmt.Println(v + " --> " + nesimages[v])
-		// }
-	}
-
-	//fmt.Println("Unique NES games: " + strconv.Itoa(len(uniquenesnames)))
-
-	// Sort entries
-	// sort.Slice(entries, func(i, j int) bool {
-	// 	return entries[i].Name < entries[j].Name
-	// })
-
-	// prettyJSON, err := json.MarshalIndent(entries, "", "    ")
-	// if err != nil {
-	// 	fmt.Println(err)
-	// 	return
-	// }
-	// WriteToFile("mister/arcade/name.json", string(prettyJSON))
-	// WriteToFile("public/mister/arcade/name.json", string(prettyJSON))
 }
 
 func generateMisterNESHTML() {
@@ -148,15 +95,30 @@ func generateMisterNESHTML() {
 		}
 	}
 
-	// Generate num.html, a.html, b.html, c.html, ..., textlist.html
+	// Generate num.html, a.html, b.html, c.html, ..., z.html, textlist.html
 	listFilename := [28]string{"num", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p",
 		"q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "textlist"}
 	for _, v := range listFilename {
 
 		var tempGames []Game
 		for _, g := range uniquenesnames {
-			temp := Game{urlSafe(g), nesimages[g], g}
-			tempGames = append(tempGames, temp)
+			// Starting with letter
+			if strings.ToLower(g[0:1]) == v {
+				temp := Game{urlSafe(g), nesimages[g], g}
+				tempGames = append(tempGames, temp)
+			}
+			// Starting with #
+			if v == "num" {
+				if _, err := strconv.Atoi(g[0:1]); err == nil {
+					temp := Game{urlSafe(g), nesimages[g], g}
+					tempGames = append(tempGames, temp)
+				}
+			}
+			// Text List
+			if v == "textlist" {
+				temp := Game{urlSafe(g), nesimages[g], g}
+				tempGames = append(tempGames, temp)
+			}
 		}
 
 		data := NESListPageData{
@@ -174,6 +136,7 @@ func generateMisterNESHTML() {
 		}
 		WriteToFile("public/mister/nes/"+strings.ToLower(v)+".html", tmplBuffer.String())
 		tmplBuffer.Reset()
+
 	}
 }
 

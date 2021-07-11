@@ -18,29 +18,30 @@
     </head>
     <body class="bg-dark text-white">
         {{template "navigation.html"}}
-        <template id="mycard">
-            <div class="image">
-                <a href=""><img src=""><h2></h2></a>
-            </div>
-        </template>
         <h1>MiSTer NES Games</h1>
         <div class="letterSelect">
             {{range .Sections}}
                 <a class="btn btn-primary {{if (eq .Name $.CurrentPage)}}active{{end}}" href="{{.Name}}.html" role="button">{{.Label}}</a>
             {{end}}
         </div>
+        
+        {{if (ne "textlist" .CurrentPage)}}
+            <section id="num" class="photos">
+                {{range .Games}}
+                <div class="image">
+                    <a href="/mister/nes/games/{{.Page}}.html"><img src="/mister/nes/snaps/{{.Image}}"><h2>{{.Name}}</h2></a>
+                </div>
+                {{end}}
+            </section>
+        {{end}}
 
-        <br/><br/>
-        
-        <section id="num" class="photos">
-            {{range .Games}}
-            <div class="image">
-                <a href="/mister/nes/games/{{.Page}}.html"><img src="/mister/nes/snaps/{{.Image}}"><h2>{{.Name}}</h2></a>
-            </div>
-            {{end}}
-        </section>
-        
-        <br/><br/>
+        {{if (eq "textlist" .CurrentPage)}}
+            <ul>
+                {{range .Games}}
+                <li><a href="/mister/nes/games/{{.Page}}.html">{{.Name}}</a></li>
+                {{end}}
+            </ul>
+        {{end}}
 
         <div class="letterSelect">
             {{range .Sections}}
