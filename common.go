@@ -21,6 +21,7 @@ type ListPageData struct {
 	Games       []Game
 	ListName    string
 	FolderName  string
+	PageTitle   string
 	Credit      template.HTML
 }
 

@@ -12,30 +12,15 @@ type HomePageData struct {
 }
 
 func main() {
-	// generateHomepageHTML()
-	// CopyCommonFiles()
+	generateIndex()
 	generateMisterArcadeGames()
-	// generateMisterNESGames()
-	// generateMisterSMSGames()
-	// generateMisterGBGames()
-	// generateMisterGBCGames()
+	generateMisterNESGames()
+	generateMisterSMSGames()
+	generateMisterGBGames()
+	generateMisterGBCGames()
 }
 
-func CopyCommonFiles() {
-	err := CopyFile("gamelist.css", "public/gamelist.css")
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	err = CopyFile("assets/favicon.ico", "public/favicon.ico")
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-}
-
-func generateHomepageHTML() {
-
+func generateIndex() {
 	var tmplBuffer bytes.Buffer
 
 	now := time.Now()
@@ -49,4 +34,15 @@ func generateHomepageHTML() {
 	WriteToFile("public/index.html", tmplBuffer.String())
 	tmplBuffer.Reset()
 
+	// Copy necessary files
+	err := CopyFile("gamelist.css", "public/gamelist.css")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	err = CopyFile("assets/favicon.ico", "public/favicon.ico")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 }

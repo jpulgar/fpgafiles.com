@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>MiSTer Arcade Games - FPGAFiles.com</title>
+        <title>MiSTer {{.PageTitle}} - FPGAFiles.com</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="/gamelist.css" rel="stylesheet">
@@ -18,10 +18,23 @@
     </head>
     <body class="bg-dark text-white">
         {{template "navigation.html"}}
-        <h1>MiSTer Arcade Games</h1>
+        <h1>MiSTer {{.PageTitle}}</h1>
         <div class="letterSelect">
             {{range .Sections}}
                 <a class="btn btn-primary {{if (eq .Name $.CurrentPage)}}active{{end}}" href="{{.Name}}.html" role="button">{{.Label}}</a>
+                {{if (eq "2012" .Name)}}
+                    <a class="btn btn-warning " href="num.html" role="button">By Name</a>
+                    <a class="btn btn-success " href="jotego.html" role="button">By Core Author</a>
+                {{end}}
+                {{if (eq "textlist" .Name)}}
+                    <a class="btn btn-warning " href="1971.html" role="button">By Year</a>
+                    <a class="btn btn-success " href="jotego.html" role="button">By Core Author</a>
+                {{end}}
+                {{if (eq "MrX-8B" .Name)}}
+                    <a class="btn btn-warning " href="1971.html" role="button">By Year</a>
+                    <a class="btn btn-success " href="num.html" role="button">By Name</a>
+                    <br/>Core Authors: Please add &lt;about author="YOUR_NAME"/&gt; in your MRA files <a href="https://github.com/jotego/jtbin/blob/master/mister/cps1/releases/1941%20%20Counter%20Attack%20-World%20900227-.mra">like this</a>.
+                {{end}}
             {{end}}
         </div>
         
@@ -45,7 +58,19 @@
 
         <div class="letterSelect">
             {{range .Sections}}
-            <a class="btn btn-primary {{if (eq .Name $.CurrentPage)}}active{{end}}" href="{{.Name}}.html" role="button">{{.Label}}</a>
+                <a class="btn btn-primary {{if (eq .Name $.CurrentPage)}}active{{end}}" href="{{.Name}}.html" role="button">{{.Label}}</a>
+                {{if (eq "2012" .Name)}}
+                    <a class="btn btn-warning " href="num.html" role="button">By Name</a>
+                    <a class="btn btn-success " href="jotego.html" role="button">By Core Author</a>
+                {{end}}
+                {{if (eq "textlist" .Name)}}
+                    <a class="btn btn-warning " href="1971.html" role="button">By Year</a>
+                    <a class="btn btn-success " href="jotego.html" role="button">By Core Author</a>
+                {{end}}
+                {{if (eq "MrX-8B" .Name)}}
+                    <a class="btn btn-warning " href="1971.html" role="button">By Year</a>
+                    <a class="btn btn-success " href="num.html" role="button">By Name</a>
+                {{end}}
             {{end}}
         </div>
         <div style="text-align: center; margin: 24px;">{{.Credit}}<br/>All copyright to these images are held by the companies who developed and published this games.</div>

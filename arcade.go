@@ -12,10 +12,11 @@ import (
 	"strings"
 )
 
-var arcadeSets []string
+var arcadeGameList []ArcadeGame
+var arcadeAuthorList []string
+var arcadeTitleAdded = make(map[string]bool)
+var arcadeAuthorAdded = make(map[string]bool)
 var moveList = make(map[string]string)
-var arcadeGameInfo = make(map[string]Entry)
-var entries []Entry
 
 // XML Structure
 type MRA_XML struct {
@@ -29,12 +30,11 @@ type MRA_XML struct {
 	} `xml:"about"`
 }
 
-// JSON Structure
-type Entry struct {
-	Name    string `json:"name"`
-	Year    string `json:"year"`
-	SetName string `json:"setname"`
-	Author  string `json:"author"`
+type ArcadeGame struct {
+	Name    string
+	Year    string
+	SetName string
+	Author  string
 }
 
 type ArcadeGamePageData struct {
@@ -48,11 +48,53 @@ type ArcadeGamePageData struct {
 }
 
 func generateMisterArcadeGames() {
-
 	generateMisterArcadeCommands()
-	generateMisterArcadeNamesJSON()
+	compileMisterArcadeData()
 	generateMisterArcadeHTML()
 	copyArcadeImages()
+}
+
+func compileMisterArcadeData() {
+
+	for _, f := range findAllFiles("assets/arcade/_Arcade", ".mra", "_alternatives") {
+		out := MRA_XML{}
+		if err := readMRA(f, &out); err != nil {
+			fmt.Println(err)
+			return
+		}
+		if out.SetName == "" {
+			if out.RBF != "" {
+				out.SetName = out.RBF
+			}
+			// MRA fixes
+			if out.Name == "Clean Sweep" {
+				out.SetName = "cleanswp"
+			}
+		}
+
+		game := ArcadeGame{Name: out.Name, SetName: out.SetName, Year: out.Year, Author: out.About.Author}
+		// Remove duplicates
+		if _, ok := arcadeTitleAdded[out.SetName]; !ok {
+			arcadeTitleAdded[out.SetName] = true
+			arcadeGameList = append(arcadeGameList, game)
+		}
+	}
+
+	// Sort arcadeGames by Name
+	sort.Slice(arcadeGameList, func(i, j int) bool {
+		return arcadeGameList[i].Name < arcadeGameList[j].Name
+	})
+
+	// Compile a list of authors
+	for _, b := range arcadeGameList {
+		if b.Author != "" {
+			if _, ok := arcadeAuthorAdded[b.Author]; !ok {
+				arcadeAuthorAdded[b.Author] = true
+				arcadeAuthorList = append(arcadeAuthorList, b.Author)
+			}
+		}
+	}
+
 }
 
 func readMRA(filename string, configObject *MRA_XML) error {
@@ -80,8 +122,7 @@ func generateMisterArcadeHTML() {
 	for _, v := range listFilename {
 
 		var tempGames []Game
-		// TODO: We need to fix this
-		for _, g := range entries {
+		for _, g := range arcadeGameList {
 			// Starting with letter
 			if strings.ToLower(g.Name[0:1]) == v {
 				temp := Game{g.SetName, g.SetName + ".png", g.Name + " (" + g.Year + ")"}
@@ -107,6 +148,78 @@ func generateMisterArcadeHTML() {
 				{"q", "Q"}, {"r", "R"}, {"s", "S"}, {"t", "T"}, {"u", "U"}, {"v", "V"}, {"w", "W"}, {"x", "X"}, {"y", "Y"},
 				{"z", "Z"}, {"textlist", "Text List"}},
 			CurrentPage: v,
+			PageTitle:   "Arcade Games by Names",
+			Games:       tempGames,
+			Credit:      template.HTML(getCredit(("arcade"))),
+		}
+
+		tmpl := template.Must(template.ParseFiles("mister/arcade/list_layout.html", "navigation.html"))
+		if err := tmpl.Execute(&tmplBuffer, data); err != nil {
+			fmt.Println(err)
+		}
+		WriteToFile("public/mister/arcade/"+strings.ToLower(v)+".html", tmplBuffer.String())
+		tmplBuffer.Reset()
+
+	}
+
+	// Generate 1971.html, 1972.html, 1973.html, ..., 2012.html
+	listYearFilename := [33]string{"1971", "1972", "1973", "1974", "1975", "1976", "1977", "1978", "1979",
+		"1980", "1981", "1982", "1983", "1984", "1985", "1986", "1987", "1988", "1989",
+		"1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999",
+		"2000", "2001", "2004", "2012"}
+	for _, v := range listYearFilename {
+
+		var tempGames []Game
+		for _, g := range arcadeGameList {
+			if g.Year == v {
+				temp := Game{g.SetName, g.SetName + ".png", g.Name + " (" + g.Year + ")"}
+				tempGames = append(tempGames, temp)
+			}
+		}
+
+		data := ListPageData{
+			Sections: []Section{{"1971", "'71"}, {"1972", "'72"}, {"1973", "'73"}, {"1974", "'74"}, {"1975", "'75"},
+				{"1976", "'76"}, {"1977", "'77"}, {"1978", "'78"}, {"1979", "'79"}, {"1980", "'80"},
+				{"1981", "'81"}, {"1982", "'82"}, {"1983", "'83"}, {"1984", "'84"}, {"1985", "'85"},
+				{"1986", "'86"}, {"1987", "'87"}, {"1988", "'88"}, {"1989", "'89"}, {"1990", "'90"},
+				{"1991", "'91"}, {"1992", "'92"}, {"1993", "'93"}, {"1994", "'94"}, {"1995", "'95"},
+				{"1996", "'96"}, {"1997", "'97"}, {"1998", "'98"}, {"1999", "'99"}, {"2000", "'00"},
+				{"2001", "'01"}, {"2004", "'04"}, {"2012", "'12"}},
+			CurrentPage: v,
+			PageTitle:   "Arcade Games by Year",
+			Games:       tempGames,
+			Credit:      template.HTML(getCredit(("arcade"))),
+		}
+
+		tmpl := template.Must(template.ParseFiles("mister/arcade/list_layout.html", "navigation.html"))
+		if err := tmpl.Execute(&tmplBuffer, data); err != nil {
+			fmt.Println(err)
+		}
+		WriteToFile("public/mister/arcade/"+strings.ToLower(v)+".html", tmplBuffer.String())
+		tmplBuffer.Reset()
+
+	}
+
+	// Generate by Author (arcadeAuthorList)
+	for _, v := range arcadeAuthorList {
+
+		var tempGames []Game
+		for _, g := range arcadeGameList {
+			if g.Author == v {
+				temp := Game{g.SetName, g.SetName + ".png", g.Name + " (" + g.Year + ")"}
+				tempGames = append(tempGames, temp)
+			}
+		}
+
+		var authorSections []Section
+		for _, h := range arcadeAuthorList {
+			authorSections = append(authorSections, Section{h, h})
+		}
+
+		data := ListPageData{
+			Sections:    authorSections,
+			CurrentPage: v,
+			PageTitle:   "Arcade Games by Core Author",
 			Games:       tempGames,
 			Credit:      template.HTML(getCredit(("arcade"))),
 		}
@@ -121,135 +234,24 @@ func generateMisterArcadeHTML() {
 	}
 
 	// Generate Arcade Games
-	for _, v := range arcadeSets {
-
-		arcadeVideo := arcadeVideos[v]
+	for _, v := range arcadeGameList {
 
 		dataGames := ArcadeGamePageData{
-			ID:     v,
-			Name:   arcadeGameInfo[v].Name,
-			Year:   arcadeGameInfo[v].Year,
-			Author: arcadeGameInfo[v].Author,
-			Moves:  template.HTML(moveList[v]),
-			Video:  arcadeVideo,
+			ID:     v.SetName,
+			Name:   v.Name,
+			Year:   v.Year,
+			Author: v.Author,
+			Moves:  template.HTML(moveList[v.SetName]),
+			Video:  arcadeVideos[v.SetName],
 			Credit: template.HTML(getCredit(("arcade"))),
 		}
 		tmpl := template.Must(template.ParseFiles("mister/arcade/game_layout.html", "navigation.html"))
 		if err := tmpl.Execute(&tmplBuffer, dataGames); err != nil {
 			fmt.Println(err)
 		}
-		WriteToFile("public/mister/arcade/games/"+v+".html", tmplBuffer.String())
+		WriteToFile("public/mister/arcade/games/"+v.SetName+".html", tmplBuffer.String())
 		tmplBuffer.Reset()
 	}
-}
-
-func generateMisterArcadeNamesJSON() {
-
-	setnames := make(map[string]bool)
-
-	for _, f := range findAllFiles("assets/arcade/_Arcade", ".mra", "_alternatives") {
-		out := MRA_XML{}
-		if err := readMRA(f, &out); err != nil {
-			fmt.Println(err)
-			return
-		}
-		if out.SetName == "" {
-			if out.RBF != "" {
-				out.SetName = out.RBF
-			}
-			// MRA fixes
-			if out.Name == "Clean Sweep" {
-				out.SetName = "cleanswp"
-			}
-		}
-		entry := Entry{Name: out.Name, SetName: out.SetName, Year: out.Year, Author: out.About.Author}
-		// Remove duplicates
-		if _, ok := setnames[out.SetName]; !ok {
-			setnames[out.SetName] = true
-			entries = append(entries, entry)
-			arcadeSets = append(arcadeSets, entry.SetName)
-			arcadeGameInfo[out.SetName] = Entry{Name: out.Name, SetName: out.SetName, Year: out.Year, Author: out.About.Author}
-		}
-	}
-
-	// Calculate Best Video Matches
-	// var distZero = 0
-	// var distOne = 0
-	// var distTwo = 0
-	// var distThree = 0
-	// var distFour = 0
-	// var distFive = 0
-	// var distMoreThanFive = 0
-	// for i := range arcadeGameInfo {
-	// 	// Only do this process for titles with no video
-	// 	if arcadeVideos[arcadeGameInfo[i].SetName] == "" {
-	// 		tempName := arcadeGameInfo[i].Name
-	// 		if idx := strings.IndexByte(tempName, '('); idx >= 0 {
-	// 			tempName = strings.TrimRight(tempName[:idx], " ")
-	// 		}
-	// 		var str1 = []rune(tempName)
-	// 		var lowestDistance = 99
-	// 		var lowestName = ""
-	// 		for _, n := range arcadeLongplays {
-	// 			temptemp := n[:strings.IndexByte(n, '|')]
-	// 			var str2 = []rune(temptemp)
-	// 			var tempDistance = levenshtein(str1, str2)
-	// 			if tempDistance < lowestDistance {
-	// 				lowestDistance = tempDistance
-	// 				lowestName = n //temptemp
-	// 			}
-	// 		}
-	// 		if lowestDistance == 0 {
-	// 			distZero = distZero + 1
-	// 		}
-	// 		if lowestDistance == 1 {
-	// 			distOne = distOne + 1
-	// 		}
-	// 		if lowestDistance == 2 {
-	// 			distTwo = distTwo + 1
-	// 		}
-	// 		if lowestDistance == 3 {
-	// 			distThree = distThree + 1
-	// 		}
-	// 		if lowestDistance == 4 {
-	// 			distFour = distFour + 1
-	// 		}
-	// 		if lowestDistance == 5 {
-	// 			distFive = distFive + 1
-	// 		}
-	// 		if lowestDistance > 5 {
-	// 			distMoreThanFive = distMoreThanFive + 1
-	// 		}
-	// 		if lowestDistance < 5 {
-	// 			// For Checking the list:
-	// 			fmt.Println(tempName + "[" + arcadeGameInfo[i].SetName + "] === " + lowestName)
-
-	// 			// will give final input for arcade_videos.go
-	// 			//fmt.Println("	\"" + arcadeGameInfo[i].SetName + "\" : \"" + lowestName[len(lowestName)-11:] + "\",")
-	// 		}
-	// 	}
-	// }
-	// Reporting
-	// fmt.Println("Distance 0: " + strconv.Itoa(distZero))
-	// fmt.Println("Distance 1: " + strconv.Itoa(distOne))
-	// fmt.Println("Distance 2: " + strconv.Itoa(distTwo))
-	// fmt.Println("Distance 3: " + strconv.Itoa(distThree))
-	// fmt.Println("Distance 4: " + strconv.Itoa(distFour))
-	// fmt.Println("Distance 5: " + strconv.Itoa(distFive))
-	// fmt.Println("Distance 5+: " + strconv.Itoa(distMoreThanFive))
-
-	// Sort entries
-	sort.Slice(entries, func(i, j int) bool {
-		return entries[i].Name < entries[j].Name
-	})
-
-	// prettyJSON, err := json.MarshalIndent(entries, "", "    ")
-	// if err != nil {
-	// 	fmt.Println(err)
-	// 	return
-	// }
-	// WriteToFile("mister/arcade/name.json", string(prettyJSON))
-	// WriteToFile("public/mister/arcade/name.json", string(prettyJSON))
 }
 
 func generateMisterArcadeCommands() {
@@ -361,23 +363,23 @@ func generateMisterArcadeCommands() {
 // This is different than other platforms since we only want to copy what is supported
 func copyArcadeImages() {
 
-	for _, v := range arcadeSets {
+	for _, v := range arcadeGameList {
 
 		// SNAPS
-		sourceSize, err := FileSize("assets/arcade/snaps/" + v + ".png")
+		sourceSize, err := FileSize("assets/arcade/snaps/" + v.SetName + ".png")
 		if err != nil {
 			fmt.Println(err)
 		} else {
-			fi, err := os.Stat("public/mister/arcade/snaps/" + v + ".png")
+			fi, err := os.Stat("public/mister/arcade/snaps/" + v.SetName + ".png")
 			if os.IsNotExist(err) {
-				fmt.Println("Copying assets/arcade/snaps/" + v + ".png")
-				copyErr := CopyFile("assets/arcade/snaps/"+v+".png", "public/mister/arcade/snaps/"+v+".png")
+				fmt.Println("Copying assets/arcade/snaps/" + v.SetName + ".png")
+				copyErr := CopyFile("assets/arcade/snaps/"+v.SetName+".png", "public/mister/arcade/snaps/"+v.SetName+".png")
 				if copyErr != nil {
 					fmt.Println(copyErr)
 				}
 			} else if sourceSize != fi.Size() {
-				fmt.Println("Copying assets/arcade/snaps/" + v + ".png")
-				copyErr := CopyFile("assets/arcade/snaps/"+v+".png", "public/mister/arcade/snaps/"+v+".png")
+				fmt.Println("Copying assets/arcade/snaps/" + v.SetName + ".png")
+				copyErr := CopyFile("assets/arcade/snaps/"+v.SetName+".png", "public/mister/arcade/snaps/"+v.SetName+".png")
 				if copyErr != nil {
 					fmt.Println(copyErr)
 				}
@@ -385,20 +387,20 @@ func copyArcadeImages() {
 		}
 
 		// TITLES
-		sourceSize, err = FileSize("assets/arcade/titles/" + v + ".png")
+		sourceSize, err = FileSize("assets/arcade/titles/" + v.SetName + ".png")
 		if err != nil {
 			fmt.Println(err)
 		} else {
-			fi, err := os.Stat("public/mister/arcade/titles/" + v + ".png")
+			fi, err := os.Stat("public/mister/arcade/titles/" + v.SetName + ".png")
 			if os.IsNotExist(err) {
-				fmt.Println("Copying assets/arcade/titles/" + v + ".png")
-				copyErr := CopyFile("assets/arcade/titles/"+v+".png", "public/mister/arcade/titles/"+v+".png")
+				fmt.Println("Copying assets/arcade/titles/" + v.SetName + ".png")
+				copyErr := CopyFile("assets/arcade/titles/"+v.SetName+".png", "public/mister/arcade/titles/"+v.SetName+".png")
 				if copyErr != nil {
 					fmt.Println(copyErr)
 				}
 			} else if sourceSize != fi.Size() {
-				fmt.Println("Copying assets/arcade/titles/" + v + ".png")
-				copyErr := CopyFile("assets/arcade/titles/"+v+".png", "public/mister/arcade/titles/"+v+".png")
+				fmt.Println("Copying assets/arcade/titles/" + v.SetName + ".png")
+				copyErr := CopyFile("assets/arcade/titles/"+v.SetName+".png", "public/mister/arcade/titles/"+v.SetName+".png")
 				if copyErr != nil {
 					fmt.Println(copyErr)
 				}
