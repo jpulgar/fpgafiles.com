@@ -2,13 +2,172 @@ package main
 
 import (
 	"bufio"
+	"bytes"
+	"fmt"
+	"html/template"
 	"io"
 	"io/fs"
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 )
+
+// Used to Generate List Pages
+type ListPageData struct {
+	Sections    []Section
+	CurrentPage string
+	Games       []Game
+	ListName    string
+	FolderName  string
+	Credit      template.HTML
+}
+
+type Game struct {
+	Page  string
+	Image string
+	Name  string
+}
+
+type Section struct {
+	Name  string
+	Label string
+}
+
+// Used for Console Individual Game Pages
+type ConsoleGamePageData struct {
+	Name       string
+	Image      string
+	Video      string
+	ListName   string
+	FolderName string
+	Credit     template.HTML
+}
+
+func compileMisterConsoleData(titleAdded map[string]bool, gameList *[]string, images map[string]string, folderName string) {
+
+	for _, f := range findAllFiles("public/mister/"+folderName+"/titles", ".png", "") {
+
+		original := f
+		original = strings.Replace(original, "public/mister/"+folderName+"/titles/", "", 1)
+		f = strings.Replace(f, "public/mister/"+folderName+"/titles/", "", 1)
+		f = strings.Replace(f, ".png", "", 1)
+		if idx := strings.IndexByte(f, '('); idx >= 0 {
+			f = strings.TrimRight(f[:idx], " ")
+		}
+		if idx := strings.IndexByte(f, '['); idx >= 0 {
+			f = strings.TrimRight(f[:idx], " ")
+		}
+		f = strings.TrimRight(f, " ")
+
+		// Only add unique titles once
+		if _, ok := titleAdded[f]; !ok {
+			titleAdded[f] = true
+			*gameList = append(*gameList, f)
+			images[f] = original
+		} else {
+			if strings.Contains(original, "USA") {
+				images[f] = original
+			}
+		}
+	}
+}
+
+func generateMisterConsoleHTML(listName string, gameList *[]string, images map[string]string, videos map[string]string, folderName string) {
+
+	var tmplBuffer bytes.Buffer
+
+	// Generate Individual Games
+	if true {
+		for _, v := range *gameList {
+
+			video := videos[v]
+
+			dataGames := ConsoleGamePageData{
+				Name:       v,
+				Image:      images[v],
+				Video:      video,
+				ListName:   listName,
+				FolderName: folderName,
+				Credit:     template.HTML(getCredit(folderName)),
+			}
+			tmpl := template.Must(template.ParseFiles("game_layout.html", "navigation.html"))
+			if err := tmpl.Execute(&tmplBuffer, dataGames); err != nil {
+				fmt.Println(err)
+			}
+			WriteToFile("public/mister/"+folderName+"/games/"+urlSafe(v)+".html", tmplBuffer.String())
+			tmplBuffer.Reset()
+
+		}
+	}
+
+	// Generate num.html, a.html, b.html, c.html, ..., z.html, textlist.html
+	listFilename := [28]string{"num", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p",
+		"q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "textlist"}
+	for _, v := range listFilename {
+
+		var tempGames []Game
+		for _, g := range *gameList {
+
+			// Starting with letter
+			if strings.ToLower(g[0:1]) == v {
+				temp := Game{urlSafe(g), images[g], g}
+				tempGames = append(tempGames, temp)
+			}
+			// Starting with #
+			if v == "num" {
+				if _, err := strconv.Atoi(g[0:1]); err == nil {
+					temp := Game{urlSafe(g), images[g], g}
+					tempGames = append(tempGames, temp)
+				}
+			}
+			// Text List
+			if v == "textlist" {
+				temp := Game{urlSafe(g), images[g], g}
+				tempGames = append(tempGames, temp)
+			}
+		}
+
+		data := ListPageData{
+			Sections: []Section{{"num", "#"}, {"a", "A"}, {"b", "B"}, {"c", "C"}, {"d", "D"}, {"e", "E"}, {"f", "F"},
+				{"h", "H"}, {"i", "I"}, {"j", "J"}, {"k", "K"}, {"l", "L"}, {"m", "M"}, {"n", "N"}, {"o", "O"}, {"p", "P"},
+				{"q", "Q"}, {"r", "R"}, {"s", "S"}, {"t", "T"}, {"u", "U"}, {"v", "V"}, {"w", "W"}, {"x", "X"}, {"y", "Y"},
+				{"z", "Z"}, {"textlist", "Text List"}},
+			CurrentPage: v,
+			Games:       tempGames,
+			ListName:    listName,
+			FolderName:  folderName,
+			Credit:      template.HTML(getCredit(folderName)),
+		}
+
+		tmpl := template.Must(template.ParseFiles("list_layout.html", "navigation.html"))
+		if err := tmpl.Execute(&tmplBuffer, data); err != nil {
+			fmt.Println(err)
+		}
+		WriteToFile("public/mister/"+folderName+"/"+strings.ToLower(v)+".html", tmplBuffer.String())
+		tmplBuffer.Reset()
+
+	}
+}
+
+func urlSafe(name string) string {
+	name = strings.Replace(name, " - ", "-", -1)
+	name = strings.Replace(name, " ", "-", -1)
+	name = strings.Replace(name, "(", "", -1)
+	name = strings.Replace(name, ")", "", -1)
+	name = strings.Replace(name, ",", "", -1)
+	name = strings.Replace(name, "'", "", -1)
+	name = strings.Replace(name, ".", "", -1)
+	name = strings.Replace(name, "&", "and", -1)
+	name = strings.Replace(name, "!", "", -1)
+	name = strings.Replace(name, "?", "", -1)
+	name = strings.Replace(name, "$", "", -1)
+	name = strings.Replace(name, "+", "and", -1)
+	name = strings.Replace(name, "[", "", -1)
+	name = strings.Replace(name, "]", "", -1)
+	return name
+}
 
 func findAllFiles(root, ext string, skip string) []string {
 	var a []string
@@ -132,4 +291,21 @@ func minimum(a, b, c int) int {
 		}
 	}
 	return c
+}
+
+func getCredit(system string) string {
+	if system == "nes" {
+		return "Game images from Jardavius @ <a href='https://emumovies.com'>https://emumovies.com</a><br/>Please consider <a href='https://emumovies.com/subscriptions/'>donating</a> to EmuMovies."
+	} else if system == "sms" {
+		return "Game images from Circo @ <a href='https://emumovies.com'>https://emumovies.com</a><br/>Please consider <a href='https://emumovies.com/subscriptions/'>donating</a> to EmuMovies."
+	} else if system == "gb" {
+		return "Game images from Circo and Jardavius @ <a href='https://emumovies.com'>https://emumovies.com</a><br/>Please consider <a href='https://emumovies.com/subscriptions/'>donating</a> to EmuMovies."
+	} else if system == "gbc" {
+		return "Game images from Jardavius @ <a href='https://emumovies.com'>https://emumovies.com</a><br/>Please consider <a href='https://emumovies.com/subscriptions/'>donating</a> to EmuMovies."
+	} else if system == "arcade" {
+		return "Game images from Antonio Paradossi @ <a href='https://www.progettosnaps.net'>https://www.progettosnaps.net</a><br/>Please consider <a href='https://www.paypal.com/paypalme/progettoSNAPS'>donating</a> to progetto-SNAPS."
+
+	} else {
+		return ""
+	}
 }

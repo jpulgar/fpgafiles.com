@@ -1,17 +1,41 @@
+<div class="collapse" id="navbarToggleExternalContent">
+  <div class="bg-dark text-white" style="margin: 13px; text-align: right;">
+    Coin-Ops: <a  href="/mister/arcade/num.html" role="button">Arcade</a>
+    <br/>
+    Nintendo: <a href="/mister/nes/a.html" role="button">NES</a> | 
+    <a href="/mister/gb/a.html" role="button">GB</a> | 
+    <a href="/mister/gbc/a.html" role="button">GBC</a>
+    <br/>
+    Sega: <a href="/mister/sms/a.html" role="button">SMS</a>
+    <!-- <a  href="/mister/arcade/num.html" role="button">Arcade Games</a> | 
+    <a href="/mister/arcade/num.html" role="button">NEO•GEO</a>
+    <br/>
+    Atari: <a href="/mister/arcade/num.html" role="button">2600</a> | 
+    <a href="/mister/arcade/num.html" role="button">5200</a> | 
+    <a href="/mister/arcade/num.html" role="button">7800</a> | 
+    <a href="/mister/arcade/num.html" role="button">Lynx</a>
+    <br/>
+    Nintendo: <a href="/mister/arcade/num.html" role="button">NES</a> | 
+    <a href="/mister/arcade/num.html" role="button">SNES</a> | 
+    <a href="/mister/arcade/num.html" role="button">GB</a> | 
+    <a href="/mister/arcade/num.html" role="button">GBA</a>
+    <br/>
+    Sega: <a href="/mister/arcade/num.html" role="button">SMS</a> | 
+    <a href="/mister/arcade/num.html" role="button">Genesis</a> | 
+    <a href="/mister/arcade/num.html" role="button">SegaCD</a> | 
+    <a href="/mister/arcade/num.html" role="button">Game Gear</a>
+    <br/>
+    Other: 
+    <a href="/mister/arcade/num.html" role="button">TurboGrafx-16</a> | 
+    <a href="/mister/arcade/num.html" role="button">WonderSwan</a> -->
+  </div>
+</div>
 <nav class="navbar navbar-dark bg-dark">
   <div class="container-fluid">
     <a style="text-decoration: none;" href="/"><span class="navbar-text" style="font-size: 22px; color: white;"><span style="color: #00abff; font-weight: bold;">FPGA</span><span style="color: white; font-weight: normal; margin-right: 7px;">Files</span><span style="margin-right: 10px;">🔴🟠🟡🟢🔵🟣</span></span></a>
-
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <div class="navbar-nav" >
-          <a class="nav-link active" style="text-align: right" href="/mister/arcade/index.html">Arcade Games</a>
-          <a class="nav-link active" style="text-align: right" href="/mister/nes/num.html">NES Games</a>
-      </div>
-    </div>
   </div>
 </nav>
 <style>
@@ -19,3 +43,13 @@
     color: #00abff;
   }
 </style>
+<script>
+  const navLinks = document.querySelectorAll('#navbarToggleExternalContent a')
+  const menuToggle = document.getElementById('navbarToggleExternalContent')
+  const bsCollapse = new bootstrap.Collapse(menuToggle, {
+    toggle: false
+  });
+  navLinks.forEach((l) => {
+      l.addEventListener('click', () => { bsCollapse.toggle() })
+  })
+</script>

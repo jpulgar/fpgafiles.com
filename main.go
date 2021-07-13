@@ -12,14 +12,17 @@ type HomePageData struct {
 }
 
 func main() {
-	CopyHomepageFiles()
-	generateHomepageHTML()
+	// generateHomepageHTML()
+	// CopyCommonFiles()
 	generateMisterArcadeGames()
-	generateMisterNESGames()
+	// generateMisterNESGames()
+	// generateMisterSMSGames()
+	// generateMisterGBGames()
+	// generateMisterGBCGames()
 }
 
-func CopyHomepageFiles() {
-	err := CopyFile("assets/fpgafiles.png", "public/fpgafiles.png")
+func CopyCommonFiles() {
+	err := CopyFile("gamelist.css", "public/gamelist.css")
 	if err != nil {
 		fmt.Println(err)
 		return

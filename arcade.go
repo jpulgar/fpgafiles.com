@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"encoding/json"
 	"encoding/xml"
 	"fmt"
 	"html/template"
@@ -16,6 +15,7 @@ import (
 var arcadeSets []string
 var moveList = make(map[string]string)
 var arcadeGameInfo = make(map[string]Entry)
+var entries []Entry
 
 // XML Structure
 type MRA_XML struct {
@@ -37,14 +37,6 @@ type Entry struct {
 	Author  string `json:"author"`
 }
 
-// HTML Structure
-type IndexPageData struct {
-	Alphabet1 []string
-	Alphabet2 []string
-	Alphabet3 []string
-	Years     []string
-}
-
 type ArcadeGamePageData struct {
 	ID     string
 	Name   string
@@ -52,6 +44,7 @@ type ArcadeGamePageData struct {
 	Author string
 	Moves  template.HTML
 	Video  string
+	Credit template.HTML
 }
 
 func generateMisterArcadeGames() {
@@ -59,10 +52,7 @@ func generateMisterArcadeGames() {
 	generateMisterArcadeCommands()
 	generateMisterArcadeNamesJSON()
 	generateMisterArcadeHTML()
-	CopyArcadeScripts()
 	copyArcadeImages()
-	//fmt.Println(arcadeSets)
-	//fmt.Println(moveList["mk3"])
 }
 
 func readMRA(filename string, configObject *MRA_XML) error {
@@ -84,23 +74,51 @@ func generateMisterArcadeHTML() {
 
 	var tmplBuffer bytes.Buffer
 
-	// Generate index.html
-	data := IndexPageData{
-		Alphabet1: []string{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"},
-		Alphabet2: []string{"K", "L", "M", "N", "O", "P", "Q", "R"},
-		Alphabet3: []string{"S", "T", "U", "V", "W", "X", "Y", "Z"},
-		Years: []string{"1971", "1972", "1973", "1974", "1975", "1976", "1977", "1978",
-			"1979", "1980", "1981", "1982", "1983", "1984", "1985", "1986", "1987", "1988",
-			"1989", "1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998",
-			"1999", "2000", "2001"},
-	}
+	// Generate num.html, a.html, b.html, c.html, ..., z.html, textlist.html
+	listFilename := [28]string{"num", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p",
+		"q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "textlist"}
+	for _, v := range listFilename {
 
-	tmpl := template.Must(template.ParseFiles("mister/arcade/index_layout.html", "navigation.html"))
-	if err := tmpl.Execute(&tmplBuffer, data); err != nil {
-		fmt.Println(err)
+		var tempGames []Game
+		// TODO: We need to fix this
+		for _, g := range entries {
+			// Starting with letter
+			if strings.ToLower(g.Name[0:1]) == v {
+				temp := Game{g.SetName, g.SetName + ".png", g.Name + " (" + g.Year + ")"}
+				tempGames = append(tempGames, temp)
+			}
+			// Starting with #
+			if v == "num" {
+				if _, err := strconv.Atoi(g.Name[0:1]); err == nil {
+					temp := Game{g.SetName, g.SetName + ".png", g.Name + " (" + g.Year + ")"}
+					tempGames = append(tempGames, temp)
+				}
+			}
+			// Text List
+			if v == "textlist" {
+				temp := Game{g.SetName, g.SetName + ".png", g.Name + " (" + g.Year + ")"}
+				tempGames = append(tempGames, temp)
+			}
+		}
+
+		data := ListPageData{
+			Sections: []Section{{"num", "#"}, {"a", "A"}, {"b", "B"}, {"c", "C"}, {"d", "D"}, {"e", "E"}, {"f", "F"},
+				{"h", "H"}, {"i", "I"}, {"j", "J"}, {"k", "K"}, {"l", "L"}, {"m", "M"}, {"n", "N"}, {"o", "O"}, {"p", "P"},
+				{"q", "Q"}, {"r", "R"}, {"s", "S"}, {"t", "T"}, {"u", "U"}, {"v", "V"}, {"w", "W"}, {"x", "X"}, {"y", "Y"},
+				{"z", "Z"}, {"textlist", "Text List"}},
+			CurrentPage: v,
+			Games:       tempGames,
+			Credit:      template.HTML(getCredit(("arcade"))),
+		}
+
+		tmpl := template.Must(template.ParseFiles("mister/arcade/list_layout.html", "navigation.html"))
+		if err := tmpl.Execute(&tmplBuffer, data); err != nil {
+			fmt.Println(err)
+		}
+		WriteToFile("public/mister/arcade/"+strings.ToLower(v)+".html", tmplBuffer.String())
+		tmplBuffer.Reset()
+
 	}
-	WriteToFile("public/mister/arcade/index.html", tmplBuffer.String())
-	tmplBuffer.Reset()
 
 	// Generate Arcade Games
 	for _, v := range arcadeSets {
@@ -114,8 +132,9 @@ func generateMisterArcadeHTML() {
 			Author: arcadeGameInfo[v].Author,
 			Moves:  template.HTML(moveList[v]),
 			Video:  arcadeVideo,
+			Credit: template.HTML(getCredit(("arcade"))),
 		}
-		tmpl = template.Must(template.ParseFiles("mister/arcade/arcade_layout.html", "navigation.html"))
+		tmpl := template.Must(template.ParseFiles("mister/arcade/game_layout.html", "navigation.html"))
 		if err := tmpl.Execute(&tmplBuffer, dataGames); err != nil {
 			fmt.Println(err)
 		}
@@ -125,7 +144,7 @@ func generateMisterArcadeHTML() {
 }
 
 func generateMisterArcadeNamesJSON() {
-	entries := []Entry{}
+
 	setnames := make(map[string]bool)
 
 	for _, f := range findAllFiles("assets/arcade/_Arcade", ".mra", "_alternatives") {
@@ -154,83 +173,83 @@ func generateMisterArcadeNamesJSON() {
 	}
 
 	// Calculate Best Video Matches
-	var distZero = 0
-	var distOne = 0
-	var distTwo = 0
-	var distThree = 0
-	var distFour = 0
-	var distFive = 0
-	var distMoreThanFive = 0
-	for i := range arcadeGameInfo {
-		// Only do this process for titles with no video
-		if arcadeVideos[arcadeGameInfo[i].SetName] == "" {
-			tempName := arcadeGameInfo[i].Name
-			if idx := strings.IndexByte(tempName, '('); idx >= 0 {
-				tempName = strings.TrimRight(tempName[:idx], " ")
-			}
-			var str1 = []rune(tempName)
-			var lowestDistance = 99
-			var lowestName = ""
-			for _, n := range arcadeLongplays {
-				temptemp := n[:strings.IndexByte(n, '|')]
-				var str2 = []rune(temptemp)
-				var tempDistance = levenshtein(str1, str2)
-				if tempDistance < lowestDistance {
-					lowestDistance = tempDistance
-					lowestName = n //temptemp
-				}
-			}
-			if lowestDistance == 0 {
-				distZero = distZero + 1
-			}
-			if lowestDistance == 1 {
-				distOne = distOne + 1
-			}
-			if lowestDistance == 2 {
-				distTwo = distTwo + 1
-			}
-			if lowestDistance == 3 {
-				distThree = distThree + 1
-			}
-			if lowestDistance == 4 {
-				distFour = distFour + 1
-			}
-			if lowestDistance == 5 {
-				distFive = distFive + 1
-			}
-			if lowestDistance > 5 {
-				distMoreThanFive = distMoreThanFive + 1
-			}
-			if lowestDistance < 5 {
-				// For Checking the list:
-				fmt.Println(tempName + "[" + arcadeGameInfo[i].SetName + "] === " + lowestName)
+	// var distZero = 0
+	// var distOne = 0
+	// var distTwo = 0
+	// var distThree = 0
+	// var distFour = 0
+	// var distFive = 0
+	// var distMoreThanFive = 0
+	// for i := range arcadeGameInfo {
+	// 	// Only do this process for titles with no video
+	// 	if arcadeVideos[arcadeGameInfo[i].SetName] == "" {
+	// 		tempName := arcadeGameInfo[i].Name
+	// 		if idx := strings.IndexByte(tempName, '('); idx >= 0 {
+	// 			tempName = strings.TrimRight(tempName[:idx], " ")
+	// 		}
+	// 		var str1 = []rune(tempName)
+	// 		var lowestDistance = 99
+	// 		var lowestName = ""
+	// 		for _, n := range arcadeLongplays {
+	// 			temptemp := n[:strings.IndexByte(n, '|')]
+	// 			var str2 = []rune(temptemp)
+	// 			var tempDistance = levenshtein(str1, str2)
+	// 			if tempDistance < lowestDistance {
+	// 				lowestDistance = tempDistance
+	// 				lowestName = n //temptemp
+	// 			}
+	// 		}
+	// 		if lowestDistance == 0 {
+	// 			distZero = distZero + 1
+	// 		}
+	// 		if lowestDistance == 1 {
+	// 			distOne = distOne + 1
+	// 		}
+	// 		if lowestDistance == 2 {
+	// 			distTwo = distTwo + 1
+	// 		}
+	// 		if lowestDistance == 3 {
+	// 			distThree = distThree + 1
+	// 		}
+	// 		if lowestDistance == 4 {
+	// 			distFour = distFour + 1
+	// 		}
+	// 		if lowestDistance == 5 {
+	// 			distFive = distFive + 1
+	// 		}
+	// 		if lowestDistance > 5 {
+	// 			distMoreThanFive = distMoreThanFive + 1
+	// 		}
+	// 		if lowestDistance < 5 {
+	// 			// For Checking the list:
+	// 			fmt.Println(tempName + "[" + arcadeGameInfo[i].SetName + "] === " + lowestName)
 
-				// will give final input for arcade_videos.go
-				//fmt.Println("	\"" + arcadeGameInfo[i].SetName + "\" : \"" + lowestName[len(lowestName)-11:] + "\",")
-			}
-		}
-	}
+	// 			// will give final input for arcade_videos.go
+	// 			//fmt.Println("	\"" + arcadeGameInfo[i].SetName + "\" : \"" + lowestName[len(lowestName)-11:] + "\",")
+	// 		}
+	// 	}
+	// }
 	// Reporting
-	fmt.Println("Distance 0: " + strconv.Itoa(distZero))
-	fmt.Println("Distance 1: " + strconv.Itoa(distOne))
-	fmt.Println("Distance 2: " + strconv.Itoa(distTwo))
-	fmt.Println("Distance 3: " + strconv.Itoa(distThree))
-	fmt.Println("Distance 4: " + strconv.Itoa(distFour))
-	fmt.Println("Distance 5: " + strconv.Itoa(distFive))
-	fmt.Println("Distance 5+: " + strconv.Itoa(distMoreThanFive))
+	// fmt.Println("Distance 0: " + strconv.Itoa(distZero))
+	// fmt.Println("Distance 1: " + strconv.Itoa(distOne))
+	// fmt.Println("Distance 2: " + strconv.Itoa(distTwo))
+	// fmt.Println("Distance 3: " + strconv.Itoa(distThree))
+	// fmt.Println("Distance 4: " + strconv.Itoa(distFour))
+	// fmt.Println("Distance 5: " + strconv.Itoa(distFive))
+	// fmt.Println("Distance 5+: " + strconv.Itoa(distMoreThanFive))
 
 	// Sort entries
 	sort.Slice(entries, func(i, j int) bool {
 		return entries[i].Name < entries[j].Name
 	})
 
-	prettyJSON, err := json.MarshalIndent(entries, "", "    ")
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	WriteToFile("mister/arcade/name.json", string(prettyJSON))
-	WriteToFile("public/mister/arcade/name.json", string(prettyJSON))
+	// prettyJSON, err := json.MarshalIndent(entries, "", "    ")
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return
+	// }
+	// WriteToFile("mister/arcade/name.json", string(prettyJSON))
+	// WriteToFile("public/mister/arcade/name.json", string(prettyJSON))
 }
 
 func generateMisterArcadeCommands() {
@@ -339,19 +358,7 @@ func generateMisterArcadeCommands() {
 	}
 }
 
-func CopyArcadeScripts() {
-	err := CopyFile("mister/arcade/arcade.js", "public/mister/arcade/arcade.js")
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	err = CopyFile("mister/arcade/arcade.css", "public/mister/arcade/arcade.css")
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-}
-
+// This is different than other platforms since we only want to copy what is supported
 func copyArcadeImages() {
 
 	for _, v := range arcadeSets {
