@@ -15,9 +15,13 @@ func main() {
 	generateIndex()
 	generateMisterArcadeGames()
 	generateMisterNESGames()
+	generateMisterSNESGames()
 	generateMisterSMSGames()
-	generateMisterGBGames()
 	generateMisterGBCGames()
+	generateMisterGenesisGames()
+	generateMisterPCEGames()
+	generateMisterLynxGames()
+
 }
 
 func generateIndex() {

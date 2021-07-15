@@ -2,7 +2,8 @@
 assets/arcade/_Arcade/
 assets/arcade/command.dat
 donotuse/
-public/
+public/mister/
+**/rips
 **/snaps
 **/titles
 **/select

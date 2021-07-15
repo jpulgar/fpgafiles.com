@@ -8,10 +8,13 @@ import (
 	"io"
 	"io/fs"
 	"io/ioutil"
+	"log"
+	"net/http"
 	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
 )
 
 // Used to Generate List Pages
@@ -111,22 +114,24 @@ func generateMisterConsoleHTML(listName string, gameList *[]string, images map[s
 		var tempGames []Game
 		for _, g := range *gameList {
 
-			// Starting with letter
-			if strings.ToLower(g[0:1]) == v {
-				temp := Game{urlSafe(g), images[g], g}
-				tempGames = append(tempGames, temp)
-			}
-			// Starting with #
-			if v == "num" {
-				if _, err := strconv.Atoi(g[0:1]); err == nil {
+			if len(g) > 0 {
+				// Starting with letter
+				if strings.ToLower(g[0:1]) == v {
 					temp := Game{urlSafe(g), images[g], g}
 					tempGames = append(tempGames, temp)
 				}
-			}
-			// Text List
-			if v == "textlist" {
-				temp := Game{urlSafe(g), images[g], g}
-				tempGames = append(tempGames, temp)
+				// Starting with #
+				if v == "num" {
+					if _, err := strconv.Atoi(g[0:1]); err == nil {
+						temp := Game{urlSafe(g), images[g], g}
+						tempGames = append(tempGames, temp)
+					}
+				}
+				// Text List
+				if v == "textlist" {
+					temp := Game{urlSafe(g), images[g], g}
+					tempGames = append(tempGames, temp)
+				}
 			}
 		}
 
@@ -294,13 +299,46 @@ func minimum(a, b, c int) int {
 	return c
 }
 
+// Sample format:
+// list: map[string]string{"Game Name": "https://www.example.com/page.html",}
+// destination: "temp"
+// extension: ".png"
+// seconds: 8
+func downloadFile(list map[string]string, destination string, extension string, seconds time.Duration) {
+	for k, v := range list {
+		if _, err := os.Stat(destination + "/" + k + ".html"); os.IsNotExist(err) {
+			response, err := http.Get(v)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			outFile, err := os.Create(destination + "/" + k + extension)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			_, err = io.Copy(outFile, response.Body)
+			if err != nil {
+				log.Fatal(err)
+			}
+			outFile.Close()
+			response.Body.Close()
+			time.Sleep(seconds * time.Second)
+		}
+	}
+}
+
 func getCredit(system string) string {
 	if system == "nes" {
 		return "Game images from Jardavius @ <a href='https://emumovies.com'>https://emumovies.com</a><br/>Please consider <a href='https://emumovies.com/subscriptions/'>donating</a> to EmuMovies."
 	} else if system == "sms" {
-		return "Game images from Circo @ <a href='https://emumovies.com'>https://emumovies.com</a><br/>Please consider <a href='https://emumovies.com/subscriptions/'>donating</a> to EmuMovies."
-	} else if system == "gb" {
-		return "Game images from Circo and Jardavius @ <a href='https://emumovies.com'>https://emumovies.com</a><br/>Please consider <a href='https://emumovies.com/subscriptions/'>donating</a> to EmuMovies."
+		return "Game images from <a href='https://www.smspower.org/'>https://www.smspower.org</a><br/>Please consider <a href='https://www.smspower.org/Home/Donate'>donating</a> to SMS Power."
+	} else if system == "genesis" {
+		return "Game images from EmuMovies @ <a href='https://emumovies.com'>https://emumovies.com</a><br/>Please consider <a href='https://emumovies.com/subscriptions/'>donating</a> to EmuMovies."
+	} else if system == "pce" {
+		return "Game images from EmuMovies @ <a href='https://emumovies.com'>https://emumovies.com</a><br/>Please consider <a href='https://emumovies.com/subscriptions/'>donating</a> to EmuMovies."
+	} else if system == "lynx" {
+		return "Game images from <a href='https://atarigamer.com'>https://atarigamer.com</a><br/>Please consider <a href='https://atarigamer.com/pages/support-atari-gamer'>donating</a> to Atari Gamer."
 	} else if system == "gbc" {
 		return "Game images from Jardavius @ <a href='https://emumovies.com'>https://emumovies.com</a><br/>Please consider <a href='https://emumovies.com/subscriptions/'>donating</a> to EmuMovies."
 	} else if system == "arcade" {
