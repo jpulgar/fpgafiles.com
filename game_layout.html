@@ -28,7 +28,7 @@
             {{if .Video}}
             <div class="embed-container"><iframe src="https://www.youtube.com/embed/{{.Video}}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
             {{end}}
-            {{if (eq "arcade" .FolderName)}}
+            {{if (eq .FolderName "arcade" "neogeo")}}
             <div class="resize">{{.Moves}}</div>
             {{end}}
             <div id="credits"></div>

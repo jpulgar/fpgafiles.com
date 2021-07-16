@@ -2,9 +2,11 @@
     "sections": {
 
         "Coin-Ops": {
-            "Arcade": {"shortname":"Arcade", "longname":"Arcade", "link": "/mister/arcade/num.html"}
+            "Arcade": {"shortname":"Arcade", "longname":"Arcade", "link": "/mister/arcade/num.html"},
+            "Neo Geo": {"shortname":"NEO•GEO", "longname":"NEO•GEO", "link": "/mister/neogeo/a.html"}
         },
         "Atari": {
+            "Atari 2600": {"shortname":"Atari 2600", "longname":"Atari 2600", "link": "/mister/atari2600/a.html"},
             "Lynx": {"shortname":"Lynx", "longname":"Lynx", "link": "/mister/lynx/a.html"}
         },
         "NEC": {
@@ -17,7 +19,8 @@
         },
         "Sega": {
             "SMS": {"shortname":"SMS", "longname":"Master System", "link": "/mister/sms/a.html"},
-            "Genesis": {"shortname":"Genesis", "longname":"Genesis / Mega Drive", "link": "/mister/genesis/a.html"}
+            "Genesis": {"shortname":"Genesis", "longname":"Genesis / Mega Drive", "link": "/mister/genesis/a.html"},
+            "Sega CD": {"shortname":"Sega CD", "longname":"Sega CD / Mega-CD", "link": "/mister/segacd/a.html"}
         }
     }
 }

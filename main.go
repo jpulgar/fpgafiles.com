@@ -12,15 +12,20 @@ type HomePageData struct {
 }
 
 func main() {
-	generateIndex()
-	generateMisterArcadeGames()
-	generateMisterNESGames()
-	generateMisterSNESGames()
-	generateMisterSMSGames()
-	generateMisterGBCGames()
-	generateMisterGenesisGames()
-	generateMisterPCEGames()
-	generateMisterLynxGames()
+
+	generateIndex() // always run
+
+	// generateMisterArcadeGames()
+	generateMisterNeoGeoGames()
+	// generateMisterNESGames()
+	// generateMisterSNESGames()
+	// generateMisterSMSGames()
+	// generateMisterGBCGames()
+	// generateMisterGenesisGames()
+	// generateMisterSegaCDGames()
+	// generateMisterAtari2600Games()
+	// generateMisterPCEGames()
+	// generateMisterLynxGames()
 }
 
 func generateIndex() {
@@ -28,7 +33,7 @@ func generateIndex() {
 
 	now := time.Now()
 	dataHomepage := HomePageData{
-		UpdatedOn: now.Format("Monday, January 06, 2006 @ 3:04PM MST"),
+		UpdatedOn: now.Format("January 06, 2006"),
 	}
 	tmpl := template.Must(template.ParseFiles("index_layout.html", "navigation.html"))
 	if err := tmpl.Execute(&tmplBuffer, dataHomepage); err != nil {
@@ -36,4 +41,6 @@ func generateIndex() {
 	}
 	WriteToFile("public/index.html", tmplBuffer.String())
 	tmplBuffer.Reset()
+
+	generateMisterArcadeCommands()
 }

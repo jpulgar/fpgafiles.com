@@ -47,6 +47,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
         showCredits("", "https://www.smspower.org", "https://www.smspower.org/Home/Donate", "SMS Power");
     } else if (directory == "/mister/genesis/") {
         showCredits("EmuMovies", "https://emumovies.com", "https://emumovies.com/subscriptions/", "EmuMovies");
+    } else if (directory == "/mister/segacd/") {
+        showCredits("EmuMovies", "https://emumovies.com", "https://emumovies.com/subscriptions/", "EmuMovies");
+    } else if (directory == "/mister/atari2600/") {
+        showCredits("EmuMovies", "https://emumovies.com", "https://emumovies.com/subscriptions/", "EmuMovies");
     }
 });
 

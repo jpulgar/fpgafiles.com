@@ -50,7 +50,6 @@ type ArcadeGamePageData struct {
 }
 
 func generateMisterArcadeGames() {
-	generateMisterArcadeCommands()
 	compileMisterArcadeData()
 	generateMisterArcadeHTML()
 	copyArcadeImages()

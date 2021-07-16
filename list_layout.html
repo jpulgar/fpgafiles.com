@@ -47,6 +47,8 @@
                 <div class="image">
                     <a href="/mister/{{$.FolderName}}/games/{{.Page}}.html"><img src="/mister/{{$.FolderName}}/snaps/{{.Image}}"><h2>{{.Name}}</h2></a>
                 </div>
+                {{else}}
+                <p style="height: 80px; margin-top: 14px;"><br/><br/>No games found for letter: {{$.CurrentPage}}<br/><br/></p>
                 {{end}}
             </section>
         {{end}}
