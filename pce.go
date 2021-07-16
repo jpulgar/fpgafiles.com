@@ -5,7 +5,7 @@ func generateMisterPCEGames() {
 	pceImages := make(map[string]string)
 	pceGameList := []string{}
 	compileMisterConsoleData(pceTitleAdded, &pceGameList, pceImages, "pce")
-	generateMisterConsoleHTML("TurboGrafx 16 / PC Engine", &pceGameList, pceImages, pceVideos, "pce")
+	generateMisterConsoleHTML("TurboGrafx 16 / PC Engine Games", &pceGameList, pceImages, pceVideos, "pce")
 }
 
 var pceVideos = map[string]string{}

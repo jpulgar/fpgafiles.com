@@ -7,6 +7,7 @@
         <link href="/gamelist.css" rel="stylesheet">
         <link href="/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <script src="/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+        <script src="/common.js" crossorigin="anonymous"></script>
         <!-- Global site tag (gtag.js) - Google Analytics -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-SSCX9KKHQV"></script>
         <script>
@@ -16,12 +17,27 @@
         gtag('config', 'G-SSCX9KKHQV');
         </script>
     </head>
-    <body class="bg-dark text-white">
+    <body class="bg-dark text-white {{$.FolderName}}">
         {{template "navigation.html"}}
-        <h1>MiSTer {{.ListName}} Games</h1>
+        <h1>MiSTer {{.ListName}}</h1>
         <div class="letterSelect">
             {{range .Sections}}
                 <a class="btn btn-primary {{if (eq .Name $.CurrentPage)}}active{{end}}" href="{{.Name}}.html" role="button">{{.Label}}</a>
+                {{if (eq "arcade" $.FolderName)}}
+                    {{if (eq "2012" .Name)}}
+                        <a class="btn btn-warning " href="num.html" role="button">By Name</a>
+                        <a class="btn btn-success " href="jotego.html" role="button">By Core Author</a>
+                    {{end}}
+                    {{if (eq "textlist" .Name)}}
+                        <a class="btn btn-warning " href="1971.html" role="button">By Year</a>
+                        <a class="btn btn-success " href="jotego.html" role="button">By Core Author</a>
+                    {{end}}
+                    {{if (eq "MrX-8B" .Name)}}
+                        <a class="btn btn-warning " href="1971.html" role="button">By Year</a>
+                        <a class="btn btn-success " href="num.html" role="button">By Name</a>
+                        <br/>Core Authors: Please add &lt;about author="YOUR_NAME"/&gt; in your MRA files <a href="https://github.com/jotego/jtbin/blob/master/mister/cps1/releases/1941%20%20Counter%20Attack%20-World%20900227-.mra">like this</a>.
+                    {{end}}
+                {{end}}
             {{end}}
         </div>
         
@@ -45,18 +61,24 @@
 
         <div class="letterSelect">
             {{range .Sections}}
-            <a class="btn btn-primary {{if (eq .Name $.CurrentPage)}}active{{end}}" href="{{.Name}}.html" role="button">{{.Label}}</a>
+                <a class="btn btn-primary {{if (eq .Name $.CurrentPage)}}active{{end}}" href="{{.Name}}.html" role="button">{{.Label}}</a>
+                {{if (eq "arcade" $.FolderName)}}
+                    {{if (eq "2012" .Name)}}
+                        <a class="btn btn-warning " href="num.html" role="button">By Name</a>
+                        <a class="btn btn-success " href="jotego.html" role="button">By Core Author</a>
+                    {{end}}
+                    {{if (eq "textlist" .Name)}}
+                        <a class="btn btn-warning " href="1971.html" role="button">By Year</a>
+                        <a class="btn btn-success " href="jotego.html" role="button">By Core Author</a>
+                    {{end}}
+                    {{if (eq "MrX-8B" .Name)}}
+                        <a class="btn btn-warning " href="1971.html" role="button">By Year</a>
+                        <a class="btn btn-success " href="num.html" role="button">By Name</a>
+                        <br/>Core Authors: Please add &lt;about author="YOUR_NAME"/&gt; in your MRA files <a href="https://github.com/jotego/jtbin/blob/master/mister/cps1/releases/1941%20%20Counter%20Attack%20-World%20900227-.mra">like this</a>.
+                    {{end}}
+                {{end}}
             {{end}}
         </div>
-        <div style="text-align: center; margin: 24px;">{{.Credit}}<br/>All copyright to these images are held by the companies who developed and published these games.</div>
-
-        <style>
-            .letterSelect a {
-                margin-bottom: 5px;
-            }
-            section.photos {
-                margin-bottom: 4px;
-            }
-        </style>
+        <div id="credits"></div>
     </body>
 </html>

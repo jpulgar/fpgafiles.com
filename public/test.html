@@ -1,0 +1,35 @@
+<html>
+    <head></head>
+    <body>
+        <div id="yeah"></div>
+<script>
+window.addEventListener('DOMContentLoaded', (event) => {
+    fetch('/navigation.json')
+    .then(response => response.json())
+    .then(data => {
+        const navTarget = document.querySelector('#yeah');
+        for (var company in data.sections) {
+            navTarget.append(company + ": ")
+            var companyLength = Object.keys(data.sections[company]).length;
+            var i = 1;
+            for (var system in data.sections[company]) {
+                var shortname = data.sections[company][system].shortname;
+                var longname = data.sections[company][system].longname;
+                var link = data.sections[company][system].link;
+                var a = document.createElement("a")
+                a.append(shortname)
+                a.setAttribute("href", link)
+                navTarget.append(a)
+                if (i != companyLength) {
+                    navTarget.append(" | ");
+                }
+                i++;
+            }
+            let br = document.createElement("br")
+            navTarget.append(br)
+        }
+    });
+});
+</script>
+    </body>
+</html>

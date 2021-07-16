@@ -5,7 +5,7 @@ func generateMisterLynxGames() {
 	lynxImages := make(map[string]string)
 	lynxGameList := []string{}
 	compileMisterConsoleData(lynxTitleAdded, &lynxGameList, lynxImages, "lynx")
-	generateMisterConsoleHTML("Lynx", &lynxGameList, lynxImages, lynxVideos, "lynx")
+	generateMisterConsoleHTML("Lynx Games", &lynxGameList, lynxImages, lynxVideos, "lynx")
 }
 
 var lynxVideos = map[string]string{}

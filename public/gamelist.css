@@ -62,4 +62,13 @@
         column-count:         1;
     }
 }
-
+.letterSelect a {
+    margin-bottom: 5px;
+}
+section.photos {
+    margin-bottom: 4px;
+}
+#credits {
+    text-align: center;
+    margin: 24px;
+  }

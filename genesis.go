@@ -5,7 +5,7 @@ func generateMisterGenesisGames() {
 	genesisImages := make(map[string]string)
 	genesisGameList := []string{}
 	compileMisterConsoleData(genesisTitleAdded, &genesisGameList, genesisImages, "genesis")
-	generateMisterConsoleHTML("Genesis", &genesisGameList, genesisImages, genesisVideos, "genesis")
+	generateMisterConsoleHTML("Genesis Games", &genesisGameList, genesisImages, genesisVideos, "genesis")
 }
 
 var genesisVideos = map[string]string{}

@@ -21,7 +21,6 @@ func main() {
 	generateMisterGenesisGames()
 	generateMisterPCEGames()
 	generateMisterLynxGames()
-
 }
 
 func generateIndex() {
@@ -37,16 +36,4 @@ func generateIndex() {
 	}
 	WriteToFile("public/index.html", tmplBuffer.String())
 	tmplBuffer.Reset()
-
-	// Copy necessary files
-	err := CopyFile("gamelist.css", "public/gamelist.css")
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	err = CopyFile("assets/favicon.ico", "public/favicon.ico")
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
 }

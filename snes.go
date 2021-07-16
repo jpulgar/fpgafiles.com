@@ -5,7 +5,7 @@ func generateMisterSNESGames() {
 	snesImages := make(map[string]string)
 	snesGameList := []string{}
 	compileMisterConsoleData(snesTitleAdded, &snesGameList, snesImages, "snes")
-	generateMisterConsoleHTML("Super Nintendo", &snesGameList, snesImages, snesVideos, "snes")
+	generateMisterConsoleHTML("Super Nintendo Games", &snesGameList, snesImages, snesVideos, "snes")
 }
 
 var snesVideos = map[string]string{}

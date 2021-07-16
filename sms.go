@@ -5,7 +5,7 @@ func generateMisterSMSGames() {
 	smsImages := make(map[string]string)
 	smsGameList := []string{}
 	compileMisterConsoleData(smsTitleAdded, &smsGameList, smsImages, "sms")
-	generateMisterConsoleHTML("SMS", &smsGameList, smsImages, smsVideos, "sms")
+	generateMisterConsoleHTML("Sega Master System Games", &smsGameList, smsImages, smsVideos, "sms")
 
 }
 

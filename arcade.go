@@ -38,13 +38,15 @@ type ArcadeGame struct {
 }
 
 type ArcadeGamePageData struct {
-	ID     string
-	Name   string
-	Year   string
-	Author string
-	Moves  template.HTML
-	Video  string
-	Credit template.HTML
+	Image      string
+	Name       string
+	Year       string
+	ListName   string
+	FolderName string
+	Author     string
+	Moves      template.HTML
+	Video      string
+	Credit     template.HTML
 }
 
 func generateMisterArcadeGames() {
@@ -148,12 +150,13 @@ func generateMisterArcadeHTML() {
 				{"q", "Q"}, {"r", "R"}, {"s", "S"}, {"t", "T"}, {"u", "U"}, {"v", "V"}, {"w", "W"}, {"x", "X"}, {"y", "Y"},
 				{"z", "Z"}, {"textlist", "Text List"}},
 			CurrentPage: v,
-			PageTitle:   "Arcade Games by Names",
+			ListName:    "Arcade Games by Names",
+			FolderName:  "arcade",
 			Games:       tempGames,
 			Credit:      template.HTML(getCredit(("arcade"))),
 		}
 
-		tmpl := template.Must(template.ParseFiles("mister/arcade/list_layout.html", "navigation.html"))
+		tmpl := template.Must(template.ParseFiles("list_layout.html", "navigation.html"))
 		if err := tmpl.Execute(&tmplBuffer, data); err != nil {
 			fmt.Println(err)
 		}
@@ -178,20 +181,21 @@ func generateMisterArcadeHTML() {
 		}
 
 		data := ListPageData{
-			Sections: []Section{{"1971", "'71"}, {"1972", "'72"}, {"1973", "'73"}, {"1974", "'74"}, {"1975", "'75"},
-				{"1976", "'76"}, {"1977", "'77"}, {"1978", "'78"}, {"1979", "'79"}, {"1980", "'80"},
-				{"1981", "'81"}, {"1982", "'82"}, {"1983", "'83"}, {"1984", "'84"}, {"1985", "'85"},
-				{"1986", "'86"}, {"1987", "'87"}, {"1988", "'88"}, {"1989", "'89"}, {"1990", "'90"},
-				{"1991", "'91"}, {"1992", "'92"}, {"1993", "'93"}, {"1994", "'94"}, {"1995", "'95"},
-				{"1996", "'96"}, {"1997", "'97"}, {"1998", "'98"}, {"1999", "'99"}, {"2000", "'00"},
-				{"2001", "'01"}, {"2004", "'04"}, {"2012", "'12"}},
+			Sections: []Section{{"1971", "71"}, {"1972", "72"}, {"1973", "73"}, {"1974", "74"}, {"1975", "75"},
+				{"1976", "76"}, {"1977", "77"}, {"1978", "78"}, {"1979", "79"}, {"1980", "80"},
+				{"1981", "81"}, {"1982", "82"}, {"1983", "83"}, {"1984", "84"}, {"1985", "85"},
+				{"1986", "86"}, {"1987", "87"}, {"1988", "88"}, {"1989", "89"}, {"1990", "90"},
+				{"1991", "91"}, {"1992", "92"}, {"1993", "93"}, {"1994", "94"}, {"1995", "95"},
+				{"1996", "96"}, {"1997", "97"}, {"1998", "98"}, {"1999", "99"}, {"2000", "00"},
+				{"2001", "01"}, {"2004", "04"}, {"2012", "12"}},
 			CurrentPage: v,
-			PageTitle:   "Arcade Games by Year",
+			ListName:    "Arcade Games by Year",
+			FolderName:  "arcade",
 			Games:       tempGames,
 			Credit:      template.HTML(getCredit(("arcade"))),
 		}
 
-		tmpl := template.Must(template.ParseFiles("mister/arcade/list_layout.html", "navigation.html"))
+		tmpl := template.Must(template.ParseFiles("list_layout.html", "navigation.html"))
 		if err := tmpl.Execute(&tmplBuffer, data); err != nil {
 			fmt.Println(err)
 		}
@@ -219,12 +223,13 @@ func generateMisterArcadeHTML() {
 		data := ListPageData{
 			Sections:    authorSections,
 			CurrentPage: v,
-			PageTitle:   "Arcade Games by Core Author",
+			ListName:    "Arcade Games by Core Author",
+			FolderName:  "arcade",
 			Games:       tempGames,
 			Credit:      template.HTML(getCredit(("arcade"))),
 		}
 
-		tmpl := template.Must(template.ParseFiles("mister/arcade/list_layout.html", "navigation.html"))
+		tmpl := template.Must(template.ParseFiles("list_layout.html", "navigation.html"))
 		if err := tmpl.Execute(&tmplBuffer, data); err != nil {
 			fmt.Println(err)
 		}
@@ -237,15 +242,17 @@ func generateMisterArcadeHTML() {
 	for _, v := range arcadeGameList {
 
 		dataGames := ArcadeGamePageData{
-			ID:     v.SetName,
-			Name:   v.Name,
-			Year:   v.Year,
-			Author: v.Author,
+			Image:      v.SetName + ".png",
+			Name:       v.Name + " (" + v.Year + ")",
+			FolderName: "arcade",
+			Author:     v.Author,
+			ListName:   "Arcade",
+
 			Moves:  template.HTML(moveList[v.SetName]),
 			Video:  arcadeVideos[v.SetName],
 			Credit: template.HTML(getCredit(("arcade"))),
 		}
-		tmpl := template.Must(template.ParseFiles("mister/arcade/game_layout.html", "navigation.html"))
+		tmpl := template.Must(template.ParseFiles("game_layout.html", "navigation.html"))
 		if err := tmpl.Execute(&tmplBuffer, dataGames); err != nil {
 			fmt.Println(err)
 		}

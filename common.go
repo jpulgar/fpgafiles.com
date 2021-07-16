@@ -83,27 +83,25 @@ func generateMisterConsoleHTML(listName string, gameList *[]string, images map[s
 	var tmplBuffer bytes.Buffer
 
 	// Generate Individual Games
-	if true {
-		for _, v := range *gameList {
+	for _, v := range *gameList {
 
-			video := videos[v]
+		video := videos[v]
 
-			dataGames := ConsoleGamePageData{
-				Name:       v,
-				Image:      images[v],
-				Video:      video,
-				ListName:   listName,
-				FolderName: folderName,
-				Credit:     template.HTML(getCredit(folderName)),
-			}
-			tmpl := template.Must(template.ParseFiles("game_layout.html", "navigation.html"))
-			if err := tmpl.Execute(&tmplBuffer, dataGames); err != nil {
-				fmt.Println(err)
-			}
-			WriteToFile("public/mister/"+folderName+"/games/"+urlSafe(v)+".html", tmplBuffer.String())
-			tmplBuffer.Reset()
-
+		dataGames := ConsoleGamePageData{
+			Name:       v,
+			Image:      images[v],
+			Video:      video,
+			ListName:   listName,
+			FolderName: folderName,
+			Credit:     template.HTML(getCredit(folderName)),
 		}
+		tmpl := template.Must(template.ParseFiles("game_layout.html", "navigation.html"))
+		if err := tmpl.Execute(&tmplBuffer, dataGames); err != nil {
+			fmt.Println(err)
+		}
+		WriteToFile("public/mister/"+folderName+"/games/"+urlSafe(v)+".html", tmplBuffer.String())
+		tmplBuffer.Reset()
+
 	}
 
 	// Generate num.html, a.html, b.html, c.html, ..., z.html, textlist.html
@@ -330,6 +328,8 @@ func downloadFile(list map[string]string, destination string, extension string, 
 
 func getCredit(system string) string {
 	if system == "nes" {
+		return "Game images from Jardavius @ <a href='https://emumovies.com'>https://emumovies.com</a><br/>Please consider <a href='https://emumovies.com/subscriptions/'>donating</a> to EmuMovies."
+	} else if system == "snes" {
 		return "Game images from Jardavius @ <a href='https://emumovies.com'>https://emumovies.com</a><br/>Please consider <a href='https://emumovies.com/subscriptions/'>donating</a> to EmuMovies."
 	} else if system == "sms" {
 		return "Game images from <a href='https://www.smspower.org/'>https://www.smspower.org</a><br/>Please consider <a href='https://www.smspower.org/Home/Donate'>donating</a> to SMS Power."
