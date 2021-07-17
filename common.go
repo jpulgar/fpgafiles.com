@@ -53,7 +53,7 @@ type ConsoleGamePageData struct {
 // Used for stats
 type Stats struct {
 	Games              int
-	LongplayPercentage int
+	LongplayPercentage float64
 }
 
 func compileMisterConsoleData(titleAdded map[string]bool, gameList *[]string, images map[string]string, videos map[string]string, folderName string) {
@@ -85,7 +85,18 @@ func compileMisterConsoleData(titleAdded map[string]bool, gameList *[]string, im
 	}
 
 	// Write stats.json for Homepage Use
-	stats := Stats{len(*gameList), len(videos)}
+	videosFound := 0
+	for _, v := range videos {
+		if v != "" {
+			videosFound++
+		}
+	}
+	videoPercentage := 0.00
+	if videosFound != 0 {
+		videoPercentage = float64(videosFound) / float64(len(*gameList))
+	}
+
+	stats := Stats{len(*gameList), videoPercentage}
 	prettyJSON, err := json.MarshalIndent(stats, "", "    ")
 	if err != nil {
 		fmt.Println(err)
