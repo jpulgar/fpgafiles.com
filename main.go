@@ -16,11 +16,12 @@ func main() {
 	generateIndex() // always run
 
 	// generateMisterArcadeGames()
-	generateMisterNeoGeoGames()
+	// generateMisterNeoGeoGames()
 	// generateMisterNESGames()
 	// generateMisterSNESGames()
 	// generateMisterSMSGames()
-	// generateMisterGBCGames()
+	generateMisterGBCGames()
+	generateMisterGBAGames()
 	// generateMisterGenesisGames()
 	// generateMisterSegaCDGames()
 	// generateMisterAtari2600Games()

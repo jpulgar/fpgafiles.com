@@ -5,7 +5,7 @@ func generateMisterGBCGames() {
 	gbcImages := make(map[string]string)
 	gbcGameList := []string{}
 	compileMisterConsoleData(gbcTitleAdded, &gbcGameList, gbcImages, "gbc")
-	generateMisterConsoleHTML("Game Boy Color Games", &gbcGameList, gbcImages, gbVideos, "gbc")
+	generateMisterConsoleHTML("Game Boy Color Games", &gbcGameList, gbcImages, gbcVideos, "gbc")
 }
 
 var gbcVideos = map[string]string{}

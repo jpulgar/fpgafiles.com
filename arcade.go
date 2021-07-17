@@ -149,7 +149,7 @@ func generateMisterArcadeHTML() {
 				{"q", "Q"}, {"r", "R"}, {"s", "S"}, {"t", "T"}, {"u", "U"}, {"v", "V"}, {"w", "W"}, {"x", "X"}, {"y", "Y"},
 				{"z", "Z"}, {"textlist", "Text List"}},
 			CurrentPage: v,
-			ListName:    "Arcade Games by Names",
+			ListName:    "Arcade Games by Name",
 			FolderName:  "arcade",
 			Games:       tempGames,
 			Credit:      template.HTML(getCredit(("arcade"))),

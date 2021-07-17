@@ -41,6 +41,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
         showCredits("Jardavius", "https://emumovies.com", "https://emumovies.com/subscriptions/", "EmuMovies");
     } else if (directory == "/mister/gbc/") {
         showCredits("Jardavius", "https://emumovies.com", "https://emumovies.com/subscriptions/", "EmuMovies");
+    } else if (directory == "/mister/gba/") {
+        showCredits("Jardavius", "https://emumovies.com", "https://emumovies.com/subscriptions/", "EmuMovies");
     } else if (directory == "/mister/snes/") {
         showCredits("Jardavius", "https://emumovies.com", "https://emumovies.com/subscriptions/", "EmuMovies");
     } else if (directory == "/mister/sms/") {

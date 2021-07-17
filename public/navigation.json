@@ -14,7 +14,8 @@
         },
         "Nintendo": {
             "NES": {"shortname":"NES", "longname":"Nintendo Entertainment System", "link": "/mister/nes/a.html"},
-            "GCC": {"shortname":"GBC", "longname":"Game Boy Color", "link": "/mister/gbc/a.html"},
+            "GBC": {"shortname":"GBC", "longname":"Game Boy Color", "link": "/mister/gbc/a.html"},
+            "GBA": {"shortname":"GBA", "longname":"Game Boy Advance", "link": "/mister/gba/a.html"},
             "SNES": {"shortname":"SNES", "longname":"Super Nintendo", "link": "/mister/snes/a.html"}
         },
         "Sega": {
