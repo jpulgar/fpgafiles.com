@@ -14,19 +14,19 @@ type HomePageData struct {
 func main() {
 
 	generateIndex() // always run
-
-	// generateMisterArcadeGames()
-	// generateMisterNeoGeoGames()
-	// generateMisterNESGames()
-	// generateMisterSNESGames()
-	// generateMisterSMSGames()
-	generateMisterGBCGames()
-	generateMisterGBAGames()
-	// generateMisterGenesisGames()
-	// generateMisterSegaCDGames()
-	// generateMisterAtari2600Games()
-	// generateMisterPCEGames()
-	// generateMisterLynxGames()
+	generateAll := false
+	// generateMisterArcadeGames(generateAll)
+	// generateMisterNeoGeoGames(generateAll)
+	generateMisterNESGames(generateAll)
+	generateMisterSNESGames(generateAll)
+	generateMisterSMSGames(generateAll)
+	generateMisterGBCGames(generateAll)
+	generateMisterGBAGames(generateAll)
+	generateMisterGenesisGames(generateAll)
+	generateMisterSegaCDGames(generateAll)
+	generateMisterAtari2600Games(generateAll)
+	generateMisterPCEGames(generateAll)
+	generateMisterLynxGames(generateAll)
 }
 
 func generateIndex() {

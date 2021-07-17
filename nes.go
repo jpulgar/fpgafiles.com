@@ -1,11 +1,13 @@
 package main
 
-func generateMisterNESGames() {
+func generateMisterNESGames(generate bool) {
 	nesTitleAdded := make(map[string]bool)
 	nesImages := make(map[string]string)
 	nesGameList := []string{}
-	compileMisterConsoleData(nesTitleAdded, &nesGameList, nesImages, "nes")
-	generateMisterConsoleHTML("NES Games", &nesGameList, nesImages, nesVideos, "nes")
+	compileMisterConsoleData(nesTitleAdded, &nesGameList, nesImages, nesVideos, "nes")
+	if generate {
+		generateMisterConsoleHTML("NES Games", &nesGameList, nesImages, nesVideos, "nes")
+	}
 }
 
 var nesVideos = map[string]string{

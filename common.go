@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"io"
@@ -49,7 +50,13 @@ type ConsoleGamePageData struct {
 	Credit     template.HTML
 }
 
-func compileMisterConsoleData(titleAdded map[string]bool, gameList *[]string, images map[string]string, folderName string) {
+// Used for stats
+type Stats struct {
+	Games              int
+	LongplayPercentage int
+}
+
+func compileMisterConsoleData(titleAdded map[string]bool, gameList *[]string, images map[string]string, videos map[string]string, folderName string) {
 
 	for _, f := range findAllFiles("public/mister/"+folderName+"/titles", ".png", "") {
 
@@ -76,6 +83,15 @@ func compileMisterConsoleData(titleAdded map[string]bool, gameList *[]string, im
 			}
 		}
 	}
+
+	// Write stats.json for Homepage Use
+	stats := Stats{len(*gameList), len(videos)}
+	prettyJSON, err := json.MarshalIndent(stats, "", "    ")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	WriteToFile("public/mister/"+folderName+"/stats.json", string(prettyJSON))
 }
 
 func generateMisterConsoleHTML(listName string, gameList *[]string, images map[string]string, videos map[string]string, folderName string) {

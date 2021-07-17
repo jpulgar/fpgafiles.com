@@ -1,11 +1,13 @@
 package main
 
-func generateMisterSMSGames() {
+func generateMisterSMSGames(generate bool) {
 	smsTitleAdded := make(map[string]bool)
 	smsImages := make(map[string]string)
 	smsGameList := []string{}
-	compileMisterConsoleData(smsTitleAdded, &smsGameList, smsImages, "sms")
-	generateMisterConsoleHTML("Sega Master System Games", &smsGameList, smsImages, smsVideos, "sms")
+	compileMisterConsoleData(smsTitleAdded, &smsGameList, smsImages, smsVideos, "sms")
+	if generate {
+		generateMisterConsoleHTML("Sega Master System Games", &smsGameList, smsImages, smsVideos, "sms")
+	}
 
 }
 

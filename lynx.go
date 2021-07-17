@@ -1,11 +1,13 @@
 package main
 
-func generateMisterLynxGames() {
+func generateMisterLynxGames(generate bool) {
 	lynxTitleAdded := make(map[string]bool)
 	lynxImages := make(map[string]string)
 	lynxGameList := []string{}
-	compileMisterConsoleData(lynxTitleAdded, &lynxGameList, lynxImages, "lynx")
-	generateMisterConsoleHTML("Lynx Games", &lynxGameList, lynxImages, lynxVideos, "lynx")
+	compileMisterConsoleData(lynxTitleAdded, &lynxGameList, lynxImages, lynxVideos, "lynx")
+	if generate {
+		generateMisterConsoleHTML("Lynx Games", &lynxGameList, lynxImages, lynxVideos, "lynx")
+	}
 }
 
 var lynxVideos = map[string]string{}
