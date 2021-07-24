@@ -1,16 +1,177 @@
 package main
 
+import (
+	"fmt"
+	"strconv"
+	"strings"
+)
+
 func generateMisterLynxGames(generate bool) {
 	lynxTitleAdded := make(map[string]bool)
 	lynxImages := make(map[string]string)
 	lynxGameList := []string{}
 	compileMisterConsoleData(lynxTitleAdded, &lynxGameList, lynxImages, lynxVideos, "lynx")
+	//lynxVideoReport(&lynxGameList)
 	if generate {
 		generateMisterConsoleHTML("Lynx Games", &lynxGameList, lynxImages, lynxVideos, "lynx")
 	}
 }
 
-var lynxVideos = map[string]string{}
+func lynxVideoReport(gameList *[]string) {
+	// Calculate Best Video Matches
+	var distZero = 0
+	var distOne = 0
+	var distTwo = 0
+	var distThree = 0
+	var distFour = 0
+	var distFive = 0
+	var distMoreThanFive = 0
+	for _, v := range *gameList {
+		// Only do this process for titles with no video
+		if lynxVideos[v] == "" {
+
+			tempName := v
+
+			if idx := strings.IndexByte(tempName, '('); idx >= 0 {
+				tempName = strings.TrimRight(tempName[:idx], " ")
+			}
+			if strings.Contains(tempName, ", The") {
+				tempName = strings.Replace(tempName, ", The", "", 1)
+				tempName = "The " + tempName
+			}
+
+			var str1 = []rune(tempName)
+			var lowestDistance = 99
+			var lowestName = ""
+			for _, n := range lynxLongplays {
+				temptemp := n[:strings.IndexByte(n, '|')]
+				var str2 = []rune(temptemp)
+				var tempDistance = levenshtein(str1, str2)
+				if tempDistance < lowestDistance {
+					lowestDistance = tempDistance
+					lowestName = n //temptemp
+				}
+			}
+			if lowestDistance == 0 {
+				distZero = distZero + 1
+			}
+			if lowestDistance == 1 {
+				distOne = distOne + 1
+			}
+			if lowestDistance == 2 {
+				distTwo = distTwo + 1
+			}
+			if lowestDistance == 3 {
+				distThree = distThree + 1
+			}
+			if lowestDistance == 4 {
+				distFour = distFour + 1
+			}
+			if lowestDistance == 5 {
+				distFive = distFive + 1
+			}
+			if lowestDistance > 5 {
+				distMoreThanFive = distMoreThanFive + 1
+			}
+
+			// Cycle through: <= 2, == 3, == 4, == 5, > 5
+			//  0, 1, 2 are correct
+			if lowestDistance >= 2 {
+
+				// lowestName = lowestName[strings.IndexByte(lowestName, '|')+1:] // for final
+				// fmt.Println("\"" + v + "\": \"" + lowestName + "\",")          // for testing
+
+				// For the rest without matches
+				fmt.Println("\"" + v + "\": \"\",")
+				if false {
+					fmt.Println(lowestName)
+				}
+			}
+		}
+	}
+	// Reporting
+	fmt.Println("Distance 0: " + strconv.Itoa(distZero))
+	fmt.Println("Distance 1: " + strconv.Itoa(distOne))
+	fmt.Println("Distance 2: " + strconv.Itoa(distTwo))
+	fmt.Println("Distance 3: " + strconv.Itoa(distThree))
+	fmt.Println("Distance 4: " + strconv.Itoa(distFour))
+	fmt.Println("Distance 5: " + strconv.Itoa(distFive))
+	fmt.Println("Distance 5+: " + strconv.Itoa(distMoreThanFive))
+}
+
+var lynxVideos = map[string]string{
+	"A.P.B.":                            "APoxk2hmStY",
+	"Awesome Golf":                      "f7fGulSlXBc",
+	"Baseball Heroes":                   "LUF_uELADuo",
+	"Basketbrawl":                       "vuZzA_Rifvg",
+	"Batman Returns":                    "oj-0b1gFE3U",
+	"BattleWheels":                      "rvHSEghdS3w",
+	"Battlezone 2000":                   "XyisEFBRqZo",
+	"Bill & Ted's Excellent Adventure":  "BYmfII3wGXw",
+	"Block Out":                         "Erq8iOQlMt4",
+	"Blue Lightning":                    "BiGqnUlsKP4",
+	"California Games":                  "GSFYx5_bdNU",
+	"Checkered Flag":                    "bOHgSxOmKeM",
+	"Chip's Challenge":                  "Qw4EFHGemfQ",
+	"Crystal Mines II":                  "4og9Orsz3DI",
+	"Desert Strike":                     "MZIy_mjT9dI",
+	"Dinolympics":                       "6xfylVuy1KY",
+	"Dirty Larry - Renegade Cop":        "n-p6j5OFWHI",
+	"Double Dragon":                     "fTQo6SF3M0k",
+	"Dracula - The Undead":              "fH-wcU---fM",
+	"Electrocop":                        "FKc_QznAIJY",
+	"European Soccer Challenge":         "uv4Ffq7FJi4",
+	"Fidelity Ultimate Chess Challenge": "kcXA_PWCRJM",
+	"Gates of Zendocon":                 "1CA-IvToZcM",
+	"Gauntlet - The Third Encounter":    "ZplHuUekqF8",
+	"Gordo 106":                         "xDvjHSKXilI",
+	"Hard Drivin'":                      "iJL8iA0OrQA",
+	"Hockey":                            "mrvsQqAUJtw",
+	"Hydra":                             "hEyLQoDAcSM",
+	"Ishido - The Way of the Stones":    "o93cuoOpIf4",
+	"Jimmy Connors' Tennis":             "sEVcTBVUArk",
+	"Joust":                             "FgCNbrSwVJA",
+	"KLAX":                              "poo4pDDtSNo",
+	"Kung Food":                         "iG6XlA3ijxg",
+	"Lemmings":                          "2HySrPl_lcY",
+	"Lynx Casino":                       "VzaSoU9bKs0",
+	"Malibu Bikini Volleyball":          "eScqNV5VaWM",
+	"Ms. Pac-Man":                       "ar0DESrKquo",
+	"NFL Football":                      "OIDoZDik-LE",
+	"Ninja Gaiden III - The Ancient Ship of Doom": "hJxsqLw86bk",
+	"Ninja Gaiden":                      "khK5RD5CFOc",
+	"Pac-Land":                          "NBLGgP6phT4",
+	"Paperboy":                          "HohglNPEGSI",
+	"Pinball Jam":                       "etkDiZZD8Yw",
+	"Pit-Fighter":                       "aI772oxFQ3s",
+	"Power Factor":                      "mJgDwh85_Ws",
+	"Qix":                               "T7tQo6VX7W8",
+	"Rampage":                           "T_E3W_JGpzI",
+	"Rampart":                           "29WA1feWIpI",
+	"RoadBlasters":                      "1JBliC-dcpo",
+	"Robo-Squash":                       "f4hv6FqYl1I",
+	"Robotron 2084":                     "vomOrfaQJfU",
+	"Rygar":                             "3nofdhw79PI",
+	"S.T.U.N. Runner":                   "1LK6R3nDM7w",
+	"Scrapyard Dog":                     "5Cz9J_ineY0",
+	"Shadow of the Beast":               "IxGxczM78oU",
+	"Shanghai":                          "phnNtxUFKB8",
+	"Steel Talons":                      "6N4bpVOL7r0",
+	"Super Asteroids & Missile Command": "ITQtOF7Wr_s",
+	"Super Off Road":                    "hHTMpuRJu0Q",
+	"Super Skweek":                      "VMh1Ft281Bs",
+	"Switchblade II":                    "fG8eWllV8fY",
+	"Todd's Adventures in Slime World":  "ZR47s1r7x8c",
+	"Toki":                              "2BrKMKIve9U",
+	"Tournament Cyberball 2072":         "PJagJithBdY",
+	"Turbo Sub":                         "6bn_l3s5zDI",
+	"Viking Child":                      "RXVjOXe8QYA",
+	"Warbirds":                          "2z-PKq21SIE",
+	"World Class Fussball - Soccer":     "y4a6SrejKqM",
+	"Xenophobe":                         "Wa6EpquD5T0",
+	"Xybots":                            "nZKFk72KvHU",
+	"Zarlor Mercenary":                  "oBPz6sr5NNQ",
+}
 
 var lynxGameInfo = map[string]string{
 	"A.P.B.":                            "https://atarigamer.com/lynx/game/APB/1513416078",
@@ -84,4 +245,77 @@ var lynxGameInfo = map[string]string{
 	"Xenophobe":                         "https://atarigamer.com/lynx/game/Xenophobe/1367643974",
 	"Xybots":                            "https://atarigamer.com/lynx/game/Xybots/329677926",
 	"Zarlor Mercenary":                  "https://atarigamer.com/lynx/game/ZarlorMercenary/1243783599",
+}
+
+var lynxLongplays = []string{
+	"A.P.B. All Points Bulletin|APoxk2hmStY",
+	"Awesome Golf|f7fGulSlXBc",
+	"Baseball Heroes|LUF_uELADuo",
+	"Basketbrawl|vuZzA_Rifvg",
+	"Batman Returns|oj-0b1gFE3U",
+	"Battle Wheels|rvHSEghdS3w",
+	"Bill and Ted's Excellent Adventure|BYmfII3wGXw",
+	"Blockout|Erq8iOQlMt4",
+	"Blue Lightning|BiGqnUlsKP4",
+	"Bubble Trouble|0zDUl1DIuE8",
+	"California Games|GSFYx5_bdNU",
+	"Checkered Flag|bOHgSxOmKeM",
+	"Chip's Challenge|Qw4EFHGemfQ",
+	"Desert Strike|MZIy_mjT9dI",
+	"Dinolympics|6xfylVuy1KY",
+	"Dirty Larry - Renegade Cop|n-p6j5OFWHI",
+	"Double Dragon|fTQo6SF3M0k",
+	"Dracula: The Undead|fH-wcU---fM",
+	"Electrocop|FKc_QznAIJY",
+	"European Soccer Challenge|uv4Ffq7FJi4",
+	"Gauntlet: The Third Encounter|ZplHuUekqF8",
+	"Gordo 106: The Mutated Lab Monkey|xDvjHSKXilI",
+	"Hard Drivin|iJL8iA0OrQA",
+	"Hockey|mrvsQqAUJtw",
+	"Hydra|hEyLQoDAcSM",
+	"Ishido: The Way of the Stones|o93cuoOpIf4",
+	"Jimmy Connors Tennis|sEVcTBVUArk",
+	"Joust|FgCNbrSwVJA",
+	"Krazy Ace Miniature Golf|w9O1L7M9HHA",
+	"Kung Food|iG6XlA3ijxg",
+	"Lemmings|2HySrPl_lcY",
+	"Lynx Casino|VzaSoU9bKs0",
+	"Malibu Bikini Volleyball|eScqNV5VaWM",
+	"Ms. Pac-Man|ar0DESrKquo",
+	"NFL Football|OIDoZDik-LE",
+	"Ninja Gaiden|khK5RD5CFOc",
+	"Ninja Gaiden III - The Ancient Ship of Doom|hJxsqLw86bk",
+	"Pac-Land|NBLGgP6phT4",
+	"Paperboy|HohglNPEGSI",
+	"Pinball Jam|etkDiZZD8Yw",
+	"Pit Fighter - The Ultimate Competition|aI772oxFQ3s",
+	"Power Factor|mJgDwh85_Ws",
+	"Prophecy I: The Viking Child|RXVjOXe8QYA",
+	"QIX|T7tQo6VX7W8",
+	"Raiden (Unlicensed)|HkXA8N_n0qA",
+	"Rampage|T_E3W_JGpzI",
+	"Rampart|29WA1feWIpI",
+	"Road Riot 4WD (Prototype)|94lnOoChAg0",
+	"Roadblasters|1JBliC-dcpo",
+	"Robo-Squash|f4hv6FqYl1I",
+	"Robotron 2048|vomOrfaQJfU",
+	"Rygar - Legendary Warrior|3nofdhw79PI",
+	"S.T.U.N. Runner|1LK6R3nDM7w",
+	"Scrapyard Dog|5Cz9J_ineY0",
+	"Shadow of the Beast|IxGxczM78oU",
+	"Shanghai|phnNtxUFKB8",
+	"Super Asteroids & Missile Command|ITQtOF7Wr_s",
+	"Super Off-Road|hHTMpuRJu0Q",
+	"Super Skweek|VMh1Ft281Bs",
+	"Switchblade II|fG8eWllV8fY",
+	"The Fidelity Ultimate Chess Challenge|kcXA_PWCRJM",
+	"The Gates of Zendocon|1CA-IvToZcM",
+	"Toki|2BrKMKIve9U",
+	"Tournament Cyberball|PJagJithBdY",
+	"Turbo Sub|6bn_l3s5zDI",
+	"Warbirds|2z-PKq21SIE",
+	"World Class Soccer|y4a6SrejKqM",
+	"Xenophobe|Wa6EpquD5T0",
+	"Xybots|nZKFk72KvHU",
+	"Zarlor Mercenary|oBPz6sr5NNQ",
 }

@@ -26,31 +26,26 @@
                 <li>You will not find roms on this site.</li>
               </ul>
 
+              <h5>Sections</h5>
               <table class="table text-white" style="font-size: 0.9rem; max-width: 600px;">
                 <thead>
                   <tr>
-                    <th scope="col">Console</th>
-                    <th scope="col">Games (gameplay)</th>
+                    <th scope="col">System</th>
+                    <th scope="col">Games<br/>(video coverage)</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>NES</td>
-                    <td>984 (20%)</td>
-                  </tr>
-                  <tr>
-                    <td>Super Nintendo</td>
-                    <td>984 (20%)</td>
-                  </tr>
-                  <tr>
-                    <td>TurboGrafx 16 / PC Engine</td>
-                    <td>984 (20%)</td>
-                  </tr>
+                  {{range .Stats}}
+                    <tr>
+                      <td><a href="/mister/{{.Link}}/a.html">{{.Name}}</a></td>
+                      <td>{{.Games}} ({{.LongplayPercentage}}%)</td>
+                    </tr>
+                  {{end}}
                 </tbody>
               </table>
 
-              <h5>Sections</h5>
-              <ul class="navhome"></ul>
+              
+              <!-- <ul class="navhome"></ul> -->
 
               <h5>Benefits MiSTer FPGA</h5>
               <ul>
@@ -80,7 +75,7 @@
               </ul>
               <p class="text-center">Last Update: {{.UpdatedOn}} by José Pulgar<br/><br/></p>
           </div>
-      <script>
+      <!-- <script>
       window.addEventListener('DOMContentLoaded', (event) => {
           fetch('/navigation.json')
           .then(response => response.json())
@@ -109,6 +104,6 @@
               }
           });
       });
-      </script>
+      </script> -->
     </body>
 </html>

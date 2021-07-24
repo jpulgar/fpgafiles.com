@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"encoding/xml"
 	"fmt"
 	"html/template"
@@ -24,9 +25,12 @@ type ROMSETS_XML struct {
 	} `xml:"romset"`
 }
 
-func generateMisterNeoGeoGames() {
+func generateMisterNeoGeoGames(generate bool) {
 	compileMisterNeoGeoData()
-	generateMisterNeoGeoHTML()
+	neogeoVideoReport()
+	if generate {
+		generateMisterNeoGeoHTML()
+	}
 	copyNeoGeoImages()
 }
 
@@ -45,6 +49,26 @@ func compileMisterNeoGeoData() {
 	sort.Slice(neogeoGameList, func(i, j int) bool {
 		return neogeoGameList[i].Name < neogeoGameList[j].Name
 	})
+
+	// Write stats.json for Homepage Use
+	videosFound := 0
+	for _, v := range neogeoVideos {
+		if v != "" {
+			videosFound++
+		}
+	}
+	videoPercentage := 0.00
+	if videosFound != 0 {
+		videoPercentage = float64(videosFound) / float64(len(neogeoGameList))
+	}
+
+	stats := Stats{nameForFolder("neogeo"), len(neogeoGameList), float64(int(videoPercentage*100*100)) / 100, "neogeo"}
+	prettyJSON, err := json.MarshalIndent(stats, "", "    ")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	WriteToFile("public/mister/neogeo/stats.json", string(prettyJSON))
 
 }
 
@@ -76,19 +100,19 @@ func generateMisterNeoGeoHTML() {
 		for _, g := range neogeoGameList {
 			// Starting with letter
 			if strings.ToLower(g.Name[0:1]) == v {
-				temp := Game{g.SetName, g.SetName + ".png", g.Name + " (" + g.Year + ")"}
+				temp := Game{g.SetName, g.SetName + ".png", neogeoVideos[g.SetName], g.Name + " (" + g.Year + ")"}
 				tempGames = append(tempGames, temp)
 			}
 			// Starting with #
 			if v == "num" {
 				if _, err := strconv.Atoi(g.Name[0:1]); err == nil {
-					temp := Game{g.SetName, g.SetName + ".png", g.Name + " (" + g.Year + ")"}
+					temp := Game{g.SetName, g.SetName + ".png", neogeoVideos[g.SetName], g.Name + " (" + g.Year + ")"}
 					tempGames = append(tempGames, temp)
 				}
 			}
 			// Text List
 			if v == "textlist" {
-				temp := Game{g.SetName, g.SetName + ".png", g.Name + " (" + g.Year + ")"}
+				temp := Game{g.SetName, g.SetName + ".png", neogeoVideos[g.SetName], g.Name + " (" + g.Year + ")"}
 				tempGames = append(tempGames, temp)
 			}
 		}
@@ -163,7 +187,7 @@ func generateMisterNeoGeoHTML() {
 			ListName:   "NEO GEO",
 
 			Moves:  template.HTML(moveList[v.SetName]),
-			Video:  arcadeVideos[v.SetName],
+			Video:  neogeoVideos[v.SetName],
 			Credit: template.HTML(getCredit(("neogeo"))),
 		}
 		tmpl := template.Must(template.ParseFiles("game_layout.html", "navigation.html"))
@@ -222,4 +246,267 @@ func copyNeoGeoImages() {
 		}
 	}
 
+}
+
+var neogeoVideos = map[string]string{
+	"2020bb":   "8d2fxVEMHVM",
+	"3countb":  "4K39cEB8TuE",
+	"alpham2":  "sZN0b4STzwU",
+	"alpham2p": "sZN0b4STzwU",
+	"androdun": "iQOrXlf34es",
+	"aodk":     "KQXR1f1aonA",
+	"aof":      "-iQwJMIS7OU",
+	"aof2":     "QBPmfdl2iDw",
+	"aof3":     "SSvJnIo36YU",
+	"b2b":      "3DncxpUdQEQ",
+	"bakatono": "CKSc7g_JlsU",
+	"bangbead": "OXfnZekue90",
+	"bjourney": "68slIqrMEEo",
+	"blazstar": "NLpLqgqimtI",
+	"breakers": "WqtsNLfo0jA",
+	"breakrev": "Z8JCOSNqX-c",
+	"bstars":   "pLihYJI9Ims",
+	"bstars2":  "Yo1AkhYPsME",
+	"burningf": "LR2NzP9Zrts",
+	"crswd2bl": "UFp8bEl5tvQ",
+	"crsword":  "H485or8VOC8",
+	"ct2k3sa":  "wkj08ignM4w",
+	"ctomaday": "a4KXiUd3Yq4",
+	"cyberlip": "11mrYej9b_g",
+	"diggerma": "ZB9GJHHoGis",
+	"doubledr": "jo6R6LqpNNY",
+	"dragonsh": "9z994UeJ44I",
+	"eightman": "hObhDF6DEvQ",
+	"fatfursp": "AlZ1q2Gddsc",
+	"fatfury1": "oqcYWJfLdSs",
+	"fatfury2": "HbWPpkTN4tY",
+	"fatfury3": "aZa05jLtFi0",
+	"fbfrenzy": "lRHVlzNq2e4",
+	"fightfev": "GniTJ2VdP8Y",
+	"flipshot": "sFZHNw2DxYY",
+	"froman2b": "uaw8xBGDod8",
+	"fswords":  "Xt813iqWwdk",
+	"galaxyfg": "T2_Qxys8Ezo",
+	"ganryu":   "nVAplIZtbSE",
+	"garou":    "yOkyX-eiofw",
+	"garoubl":  "yOkyX-eiofw",
+	"garouh":   "yOkyX-eiofw",
+	"garoup":   "yOkyX-eiofw",
+	"ghostlop": "oaUCJWiTBZ4",
+	"goalx3":   "bSPQbx5He-U",
+	"gowcaizr": "t8SvI-2nq-Q",
+	"gpilots":  "W-eirUeg2AM",
+	"gururin":  "l38qT7SjzwY",
+	"ironclad": "cwru2DS8egY",
+	"irrmaze":  "9E-201c6Vv8",
+	"janshin":  "pPmEln8tYG0",
+	"joyjoy":   "-ar3NP0hNOI",
+	"kabukikl": "8W-vjrs9gbs",
+	"karnovr":  "ujnRoLwiIlg",
+	"kf10thep": "e3Xk9S8sdmc",
+	"kf2k2mp":  "wlZKfAxjTw0",
+	"kf2k2pls": "PDK7zl8yewI",
+	"kf2k5uni": "UMYS8rJm-JM",
+	"kizuna":   "V2aLaBlI69I",
+	"kof2000":  "xrQLRCwM1Ds",
+	"kof2001":  "-2TcH2ismsY",
+	"kof2002":  "YNfD5ndPSjs",
+	"kof2003":  "IFHvDdUAnzI",
+	"kof2k4se": "WLkRhiWFd6w",
+	"kof94":    "g4G0dX-w8QI",
+	"kof95":    "greALx7jn4U",
+	"kof96":    "yuR-XEzUHAA",
+	"kof97":    "H5lc6Lle2lc",
+	"kof98":    "knFWtmDkDiM",
+	"kof99":    "DuAg9ILvzUo",
+	"kof99p":   "7zm3rscp5uI",
+	"kog":      "5FuSF7UbeRw",
+	"kotm":     "fpkyLJsiHSw",
+	"kotm2":    "hzcGFbUBWhY",
+	"lans2004": "3pr4T0t7YnA",
+	"lastblad": "pYoVkj-WCrg",
+	"lastbld2": "-DQsa_nM9e4",
+	"lasthope": "4FKa3HZd6Tk",
+	"lastsold": "Ip_GTG8-Xp0",
+	"lbowling": "UWoGPJGjnAo",
+	"legendos": "PHhuFChvqd0",
+	"lresort":  "y1xUT7QJ-mA",
+	"magdrop2": "W0f1uiunMA8",
+	"magdrop3": "X4aOHQxbJ9o",
+	"maglord":  "H7ToKGzgXm0",
+	"mahretsu": "Sp98HtTNatY",
+	"marukodq": "oPuVFSIG6P4",
+	"matrim":   "mt4NEXOTXpg",
+	"miexchng": "XhnZAy_CNlA",
+	"minasan":  "TtgT_anGCEE",
+	"moshougi": "GYIvHFwOk84",
+	"ms4plus":  "ngfD2YrTbIo",
+	"mslug":    "9fzLnRvsRc4",
+	"mslug2":   "6gAVh4atOSQ",
+	"mslug2t":  "0GxV8wdO9pM",
+	"mslug3":   "OPCHeaqZZBQ",
+	"mslug4":   "ngfD2YrTbIo",
+	"mslug5":   "IjM7kJ6Kj1Q",
+	"mslug6":   "5-BfrFiIPt0",
+	"mslugx":   "F5Q3CCmVq4E",
+	"mutnat":   "16FdFl3KK0I",
+	"nam1975":  "TfvBhYF-6jI",
+	"ncombat":  "ShfdduWAyJg",
+	"ncommand": "eoyQdxJgD0I",
+	"neobombe": "It8l3CNXUyg",
+	"neocup98": "miTLcvursxk",
+	"neodrift": "cu9cWFqi3lk",
+	"neomrdo":  "l4pmbdAtjYg",
+	"ninjamas": "4auIUYQD5_E",
+	"nitd":     "esTq3L5LR0U",
+	"overtop":  "8fE_PMryMuM",
+	"panicbom": "3XHS5n7HuRM",
+	"pbobbl2n": "_MMq7yrV6fI",
+	"pbobblen": "F1I0lzM_UZI",
+	"pgoal":    "qcvsKWSfKgE",
+	"pnyaa":    "f22CCxJ9eko",
+	"popbounc": "U4FXsVClQpA",
+	"preisle2": "pCUuVrxNH2A",
+	"pspikes2": "dYpYqoHqWUM",
+	"pulstar":  "GHkRiKPhito",
+	"puzzldpr": "PRQmuMbvJb0",
+	"puzzledp": "elldJ5ZZsvU",
+	"quizdai2": "4zwNAxdA-X4",
+	"quizdais": "Ldk7C3UU8lw",
+	"quizkof":  "w0PCL2WjBWI",
+	"ragnagrd": "9rEcf390X-Y",
+	"rbff1":    "uxvLQbNznLQ",
+	"rbff2":    "jhWomIO4EHk",
+	"rbffspec": "Q4O6a9RYQ7A",
+	"ridhero":  "iwsIuiK7Rjo",
+	"roboarmy": "6f4U5CMLjro",
+	"rotd":     "msZUQkEZKZQ",
+	"s1945p":   "Zv-sd9C4ne8",
+	"samsh5sp": "sGCCuZxhj_0",
+	"samsho":   "zWmOMwJB8xQ",
+	"samsho2":  "pJdfRC0fnEc",
+	"samsho3":  "in6ojxEZH1I",
+	"samsho4":  "KxtpJEvTBv4",
+	"samsho5":  "P8Oeqpqlx9w",
+	"savagere": "QPng_eh_864",
+	"sbp":      "LfwXB-eGxEs",
+	"sdodgeb":  "NKyAUOng7ew",
+	"sengoku":  "SLLKQLYHQWw",
+	"sengoku2": "NReHy05g26g",
+	"sengoku3": "17F_NMw_tXo",
+	"shocktr2": "4DF5ZFsX1MY",
+	"shocktro": "RuFGB_h1_3Q",
+	"socbrawl": "2_k2dnstm6w",
+	"sonicwi2": "PXc0Rksr61I",
+	"sonicwi3": "mKpC_lnB7FM",
+	"spinmast": "VVK7dZGYgfA",
+	"ssideki":  "OrP_V6lrSDI",
+	"ssideki2": "4-piSx2a1zQ",
+	"ssideki3": "sBUa5xJrlyo",
+	"ssideki4": "eqW5SkPLh0M",
+	"stakwin":  "fa9LWD7MxuE",
+	"stakwin2": "Acd2QX8DSzw",
+	"strhoop":  "7dRpE7FDWms",
+	"superspy": "5bFFkNmhN_w",
+	"svc":      "ctBMxNDGciY",
+	"svcplus":  "5UbP_hZkTGM",
+	"svcsplus": "kgYFyGYasi4",
+	"tophuntr": "XEDONk2oaD0",
+	"tpgolf":   "KYjVuVX-Vck",
+	"trally":   "KjMP7PxKixA",
+	"turfmast": "WDt9HYniyHs",
+	"twinspri": "zEhFh_-DVD8",
+	"twsoc96":  "Nf2KPfuNxCs",
+	"viewpoin": "IPBQ2NhSO9M",
+	"wakuwak7": "DefAwU3GcEI",
+	"wh1":      "QDYhvy7uCCo",
+	"wh2":      "iVBHgr6TH2w",
+	"wh2j":     "1jOGp4Gtt3w",
+	"whp":      "snP1uLk0s_8",
+	"wjammers": "Eg93nPgR6rw",
+	"zedblade": "E_YAKJSFvR4",
+	"zintrckb": "lawxVuJi9VY",
+	"zupapa":   "a2diSxAds2Q",
+}
+
+func neogeoVideoReport() {
+	// Calculate Best Video Matches
+	var distZero = 0
+	var distOne = 0
+	var distTwo = 0
+	var distThree = 0
+	var distFour = 0
+	var distFive = 0
+	var distMoreThanFive = 0
+	for _, v := range neogeoGameList {
+		// Only do this process for titles with no video
+		if neogeoVideos[v.SetName] == "" {
+
+			tempName := v.Name
+
+			if idx := strings.IndexByte(tempName, '('); idx >= 0 {
+				tempName = strings.TrimRight(tempName[:idx], " ")
+			}
+			if strings.Contains(tempName, ", The") {
+				tempName = strings.Replace(tempName, ", The", "", 1)
+				tempName = "The " + tempName
+			}
+
+			var str1 = []rune(tempName)
+			var lowestDistance = 99
+			var lowestName = ""
+			for _, n := range arcadeLongplays {
+				temptemp := n[:strings.IndexByte(n, '|')]
+				var str2 = []rune(temptemp)
+				var tempDistance = levenshtein(str1, str2)
+				if tempDistance < lowestDistance {
+					lowestDistance = tempDistance
+					lowestName = n //temptemp
+				}
+			}
+			if lowestDistance == 0 {
+				distZero = distZero + 1
+			}
+			if lowestDistance == 1 {
+				distOne = distOne + 1
+			}
+			if lowestDistance == 2 {
+				distTwo = distTwo + 1
+			}
+			if lowestDistance == 3 {
+				distThree = distThree + 1
+			}
+			if lowestDistance == 4 {
+				distFour = distFour + 1
+			}
+			if lowestDistance == 5 {
+				distFive = distFive + 1
+			}
+			if lowestDistance > 5 {
+				distMoreThanFive = distMoreThanFive + 1
+			}
+
+			// Cycle through: <= 2, == 3, == 4, == 5, > 5
+			//   0, 1, 2, 3 are done
+			if lowestDistance > 0 {
+
+				//lowestName = lowestName[strings.IndexByte(lowestName, '|')+1:] // for final
+				//fmt.Println("\"" + v.Name + "\": \"" + lowestName + "\",") // for testing
+
+				// For the rest without matches
+				fmt.Println("\"" + v.SetName + "\": \"\",")
+				if false {
+					fmt.Println(lowestName)
+				}
+			}
+		}
+	}
+	// Reporting
+	fmt.Println("Distance 0: " + strconv.Itoa(distZero))
+	fmt.Println("Distance 1: " + strconv.Itoa(distOne))
+	fmt.Println("Distance 2: " + strconv.Itoa(distTwo))
+	fmt.Println("Distance 3: " + strconv.Itoa(distThree))
+	fmt.Println("Distance 4: " + strconv.Itoa(distFour))
+	fmt.Println("Distance 5: " + strconv.Itoa(distFive))
+	fmt.Println("Distance 5+: " + strconv.Itoa(distMoreThanFive))
 }

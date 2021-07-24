@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"encoding/xml"
 	"fmt"
 	"html/template"
@@ -49,9 +50,11 @@ type ArcadeGamePageData struct {
 	Credit     template.HTML
 }
 
-func generateMisterArcadeGames() {
+func generateMisterArcadeGames(generate bool) {
 	compileMisterArcadeData()
-	generateMisterArcadeHTML()
+	if generate {
+		generateMisterArcadeHTML()
+	}
 	copyArcadeImages()
 }
 
@@ -96,6 +99,26 @@ func compileMisterArcadeData() {
 		}
 	}
 
+	// Write stats.json for Homepage Use
+	videosFound := 0
+	for _, v := range arcadeVideos {
+		if v != "" {
+			videosFound++
+		}
+	}
+	videoPercentage := 0.00
+	if videosFound != 0 {
+		videoPercentage = float64(videosFound) / float64(len(arcadeGameList))
+	}
+
+	stats := Stats{nameForFolder("arcade"), len(arcadeGameList), float64(int(videoPercentage*100*100)) / 100, "arcade"}
+	prettyJSON, err := json.MarshalIndent(stats, "", "    ")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	WriteToFile("public/mister/arcade/stats.json", string(prettyJSON))
+
 }
 
 func readMRA(filename string, configObject *MRA_XML) error {
@@ -107,6 +130,20 @@ func readMRA(filename string, configObject *MRA_XML) error {
 	}
 
 	if err := xml.Unmarshal([]byte(buf), &configObject); err != nil {
+		return err
+	} else {
+		return nil
+	}
+}
+
+func readStatFile(filename string, statObject *Stats) error {
+	configFilename := filename
+	buf, err := ioutil.ReadFile(configFilename)
+	if err != nil {
+		return err
+	}
+
+	if err := json.Unmarshal([]byte(buf), &statObject); err != nil {
 		return err
 	} else {
 		return nil
@@ -126,19 +163,19 @@ func generateMisterArcadeHTML() {
 		for _, g := range arcadeGameList {
 			// Starting with letter
 			if strings.ToLower(g.Name[0:1]) == v {
-				temp := Game{g.SetName, g.SetName + ".png", g.Name + " (" + g.Year + ")"}
+				temp := Game{g.SetName, g.SetName + ".png", arcadeVideos[g.SetName], g.Name + " (" + g.Year + ")"}
 				tempGames = append(tempGames, temp)
 			}
 			// Starting with #
 			if v == "num" {
 				if _, err := strconv.Atoi(g.Name[0:1]); err == nil {
-					temp := Game{g.SetName, g.SetName + ".png", g.Name + " (" + g.Year + ")"}
+					temp := Game{g.SetName, g.SetName + ".png", arcadeVideos[g.SetName], g.Name + " (" + g.Year + ")"}
 					tempGames = append(tempGames, temp)
 				}
 			}
 			// Text List
 			if v == "textlist" {
-				temp := Game{g.SetName, g.SetName + ".png", g.Name + " (" + g.Year + ")"}
+				temp := Game{g.SetName, g.SetName + ".png", arcadeVideos[g.SetName], g.Name + " (" + g.Year + ")"}
 				tempGames = append(tempGames, temp)
 			}
 		}
@@ -174,7 +211,7 @@ func generateMisterArcadeHTML() {
 		var tempGames []Game
 		for _, g := range arcadeGameList {
 			if g.Year == v {
-				temp := Game{g.SetName, g.SetName + ".png", g.Name + " (" + g.Year + ")"}
+				temp := Game{g.SetName, g.SetName + ".png", arcadeVideos[g.SetName], g.Name + " (" + g.Year + ")"}
 				tempGames = append(tempGames, temp)
 			}
 		}
@@ -209,7 +246,7 @@ func generateMisterArcadeHTML() {
 		var tempGames []Game
 		for _, g := range arcadeGameList {
 			if g.Author == v {
-				temp := Game{g.SetName, g.SetName + ".png", g.Name + " (" + g.Year + ")"}
+				temp := Game{g.SetName, g.SetName + ".png", arcadeVideos[g.SetName], g.Name + " (" + g.Year + ")"}
 				tempGames = append(tempGames, temp)
 			}
 		}

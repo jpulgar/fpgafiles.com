@@ -32,6 +32,7 @@ type ListPageData struct {
 type Game struct {
 	Page  string
 	Image string
+	Video string
 	Name  string
 }
 
@@ -52,8 +53,10 @@ type ConsoleGamePageData struct {
 
 // Used for stats
 type Stats struct {
+	Name               string
 	Games              int
 	LongplayPercentage float64
+	Link               string
 }
 
 func compileMisterConsoleData(titleAdded map[string]bool, gameList *[]string, images map[string]string, videos map[string]string, folderName string) {
@@ -96,13 +99,42 @@ func compileMisterConsoleData(titleAdded map[string]bool, gameList *[]string, im
 		videoPercentage = float64(videosFound) / float64(len(*gameList))
 	}
 
-	stats := Stats{len(*gameList), videoPercentage}
+	stats := Stats{nameForFolder(folderName), len(*gameList), float64(int(videoPercentage*100*100)) / 100, folderName}
 	prettyJSON, err := json.MarshalIndent(stats, "", "    ")
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 	WriteToFile("public/mister/"+folderName+"/stats.json", string(prettyJSON))
+}
+
+func nameForFolder(folder string) string {
+	if folder == "arcade" {
+		return "Arcade"
+	} else if folder == "neogeo" {
+		return "Neo Geo"
+	} else if folder == "atari2600" {
+		return "Atari 2600"
+	} else if folder == "lynx" {
+		return "Lynx"
+	} else if folder == "pce" {
+		return "TurboGrafx 16 / PC Engine"
+	} else if folder == "nes" {
+		return "NES"
+	} else if folder == "gbc" {
+		return "Game Boy Color"
+	} else if folder == "gba" {
+		return "Game Boy Advance"
+	} else if folder == "snes" {
+		return "Super Nintendo"
+	} else if folder == "sms" {
+		return "Sega Master System"
+	} else if folder == "genesis" {
+		return "Genesis / Mega Drive"
+	} else if folder == "segacd" {
+		return "Sega CD / Mega-CD"
+	}
+	return ""
 }
 
 func generateMisterConsoleHTML(listName string, gameList *[]string, images map[string]string, videos map[string]string, folderName string) {
@@ -142,19 +174,19 @@ func generateMisterConsoleHTML(listName string, gameList *[]string, images map[s
 			if len(g) > 0 {
 				// Starting with letter
 				if strings.ToLower(g[0:1]) == v {
-					temp := Game{urlSafe(g), images[g], g}
+					temp := Game{urlSafe(g), images[g], videos[g], g}
 					tempGames = append(tempGames, temp)
 				}
 				// Starting with #
 				if v == "num" {
 					if _, err := strconv.Atoi(g[0:1]); err == nil {
-						temp := Game{urlSafe(g), images[g], g}
+						temp := Game{urlSafe(g), images[g], videos[g], g}
 						tempGames = append(tempGames, temp)
 					}
 				}
 				// Text List
 				if v == "textlist" {
-					temp := Game{urlSafe(g), images[g], g}
+					temp := Game{urlSafe(g), images[g], videos[g], g}
 					tempGames = append(tempGames, temp)
 				}
 			}

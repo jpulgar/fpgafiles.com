@@ -51,31 +51,81 @@
                 <li>You will not find roms on this site.</li>
               </ul>
 
+              <h5>Sections</h5>
               <table class="table text-white" style="font-size: 0.9rem; max-width: 600px;">
                 <thead>
                   <tr>
-                    <th scope="col">Console</th>
-                    <th scope="col">Games (gameplay)</th>
+                    <th scope="col">System</th>
+                    <th scope="col">Games<br/>(video coverage)</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>NES</td>
-                    <td>984 (20%)</td>
-                  </tr>
-                  <tr>
-                    <td>Super Nintendo</td>
-                    <td>984 (20%)</td>
-                  </tr>
-                  <tr>
-                    <td>TurboGrafx 16 / PC Engine</td>
-                    <td>984 (20%)</td>
-                  </tr>
+                  
+                    <tr>
+                      <td><a href="/mister/arcade/a.html">Arcade</a></td>
+                      <td>372 (100%)</td>
+                    </tr>
+                  
+                    <tr>
+                      <td><a href="/mister/neogeo/a.html">Neo Geo</a></td>
+                      <td>178 (100%)</td>
+                    </tr>
+                  
+                    <tr>
+                      <td><a href="/mister/atari2600/a.html">Atari 2600</a></td>
+                      <td>583 (0%)</td>
+                    </tr>
+                  
+                    <tr>
+                      <td><a href="/mister/lynx/a.html">Lynx</a></td>
+                      <td>71 (100%)</td>
+                    </tr>
+                  
+                    <tr>
+                      <td><a href="/mister/pce/a.html">TurboGrafx 16 / PC Engine</a></td>
+                      <td>355 (0%)</td>
+                    </tr>
+                  
+                    <tr>
+                      <td><a href="/mister/nes/a.html">NES</a></td>
+                      <td>1829 (35.1%)</td>
+                    </tr>
+                  
+                    <tr>
+                      <td><a href="/mister/gbc/a.html">Game Boy Color</a></td>
+                      <td>578 (0%)</td>
+                    </tr>
+                  
+                    <tr>
+                      <td><a href="/mister/gba/a.html">Game Boy Advance</a></td>
+                      <td>1935 (0%)</td>
+                    </tr>
+                  
+                    <tr>
+                      <td><a href="/mister/snes/a.html">Super Nintendo</a></td>
+                      <td>2282 (0%)</td>
+                    </tr>
+                  
+                    <tr>
+                      <td><a href="/mister/sms/a.html">Sega Master System</a></td>
+                      <td>380 (0%)</td>
+                    </tr>
+                  
+                    <tr>
+                      <td><a href="/mister/genesis/a.html">Genesis / Mega Drive</a></td>
+                      <td>1184 (0%)</td>
+                    </tr>
+                  
+                    <tr>
+                      <td><a href="/mister/segacd/a.html">Sega CD / Mega-CD</a></td>
+                      <td>257 (100%)</td>
+                    </tr>
+                  
                 </tbody>
               </table>
 
-              <h5>Sections</h5>
-              <ul class="navhome"></ul>
+              
+              
 
               <h5>Benefits MiSTer FPGA</h5>
               <ul>
@@ -105,35 +155,6 @@
               </ul>
               <p class="text-center">Last Update: July 21, 2021 by José Pulgar<br/><br/></p>
           </div>
-      <script>
-      window.addEventListener('DOMContentLoaded', (event) => {
-          fetch('/navigation.json')
-          .then(response => response.json())
-          .then(data => {
-              const navTarget = document.querySelector('.navhome');
-              for (var company in data.sections) {
-                  
-                  var li = document.createElement("li")
-                  li.append(company + ": ")
-                  var companyLength = Object.keys(data.sections[company]).length;
-                  var i = 1;
-                  for (var system in data.sections[company]) {
-                      var shortname = data.sections[company][system].shortname;
-                      var longname = data.sections[company][system].longname;
-                      var link = data.sections[company][system].link;
-                      var a = document.createElement("a")
-                      a.append(longname)
-                      a.setAttribute("href", link)
-                      li.append(a)
-                      if (i != companyLength) {
-                          li.append(" | ");
-                      }
-                      i++;
-                  }
-                  navTarget.append(li)
-              }
-          });
-      });
-      </script>
+      
     </body>
 </html>
