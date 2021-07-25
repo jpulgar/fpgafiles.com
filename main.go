@@ -17,11 +17,11 @@ func main() {
 	generateIndex() // always run first
 
 	generateAll := true
-	generateMisterArcadeGames(generateAll)
-	generateMisterNeoGeoGames(generateAll)
+	// generateMisterArcadeGames(generateAll)
+	// generateMisterNeoGeoGames(generateAll)
 	// generateMisterNESGames(generateAll)
 	// generateMisterSNESGames(generateAll)
-	// generateMisterSMSGames(generateAll)
+	generateMisterSMSGames(generateAll)
 	// generateMisterGBCGames(generateAll)
 	// generateMisterGBAGames(generateAll)
 	// generateMisterGenesisGames(generateAll)
