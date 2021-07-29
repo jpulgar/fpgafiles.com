@@ -32,6 +32,7 @@
     /* Just in case there are inline attributes */
     width: 100% !important;
     height: auto !important;
+    /* image-rendering: crisp-edges; */
 }
 
 @media (max-width: 1200px) {

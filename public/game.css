@@ -6,6 +6,7 @@ div.content {
   img.resize {
     width: 100%;  
     height: auto;
+    image-rendering: crisp-edges;
   }
   div.resize {
     width: 100%;  

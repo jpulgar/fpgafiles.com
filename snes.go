@@ -6,7 +6,7 @@ func generateMisterSNESGames(generate bool) {
 	snesGameList := []string{}
 	compileMisterConsoleData(snesTitleAdded, &snesGameList, snesImages, snesVideos, "snes")
 	if generate {
-		generateMisterConsoleHTML("Super Nintendo Games", &snesGameList, snesImages, snesVideos, "snes")
+		generateMisterConsoleHTML("Super Nintendo Games", &snesGameList, snesImages, snesVideos, "snes", "super nintendo")
 	}
 }
 

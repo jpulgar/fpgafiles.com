@@ -13,7 +13,7 @@ func generateMisterLynxGames(generate bool) {
 	compileMisterConsoleData(lynxTitleAdded, &lynxGameList, lynxImages, lynxVideos, "lynx")
 	//lynxVideoReport(&lynxGameList)
 	if generate {
-		generateMisterConsoleHTML("Lynx Games", &lynxGameList, lynxImages, lynxVideos, "lynx")
+		generateMisterConsoleHTML("Lynx Games", &lynxGameList, lynxImages, lynxVideos, "lynx", "lynx")
 	}
 }
 

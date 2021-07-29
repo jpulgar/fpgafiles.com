@@ -19,7 +19,7 @@
     </head>
     <body class="bg-dark text-white {{$.FolderName}}">
         {{template "navigation.html"}}
-        <h1>MiSTer {{.ListName}}</h1>
+        <h1>MiSTer: {{.ListName}}</h1>
         <div class="letterSelect">
             {{range .Sections}}
                 <a class="btn btn-primary {{if (eq .Name $.CurrentPage)}}active{{end}}" href="{{.Name}}.html" role="button">{{.Label}}</a>
@@ -57,7 +57,7 @@
             <ul>
                 {{range .Games}}
                 <li><a href="/mister/{{$.FolderName}}/games/{{.Page}}.html">{{.Name}}</a> {{if .Video}}🎦{{else}}
-                    <a href="https://www.youtube.com/results?search_query={{.Name}} sms longplay" target="new">❌</a>
+                    <a href="https://www.youtube.com/results?search_query={{.Name}} {{.YouTubeSearch}} longplay" style="text-decoration: none;" target="new">❌</a>
                     {{end}}</li>
                 {{end}}
             </ul>

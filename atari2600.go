@@ -6,7 +6,7 @@ func generateMisterAtari2600Games(generate bool) {
 	atari2600GameList := []string{}
 	compileMisterConsoleData(atari2600TitleAdded, &atari2600GameList, atari2600Images, atari2600Videos, "atari2600")
 	if generate {
-		generateMisterConsoleHTML("Atari 2600 Games", &atari2600GameList, atari2600Images, atari2600Videos, "atari2600")
+		generateMisterConsoleHTML("Atari 2600 Games", &atari2600GameList, atari2600Images, atari2600Videos, "atari2600", "atari 2600")
 	}
 }
 

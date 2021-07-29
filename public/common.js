@@ -31,27 +31,31 @@ window.addEventListener('DOMContentLoaded', (event) => {
     // Credits
     var pathname = window.location.pathname;
     var directory = pathname.substring(0, pathname.lastIndexOf('/')) + "/";
-    if (directory == "/mister/arcade/") {
+    if (directory.indexOf("/arcade/") != -1) {
         showCredits("Antonio Paradossi", "https://www.progettosnaps.net", "https://www.paypal.com/paypalme/progettoSNAPS", "progetto-SNAPS");
-    } else if (directory == "/mister/lynx/") {
+    } else if (directory.indexOf("/neogeo/") != -1) {
+        showCredits("Antonio Paradossi", "https://www.progettosnaps.net", "https://www.paypal.com/paypalme/progettoSNAPS", "progetto-SNAPS");
+    } else if (directory.indexOf("/lynx/") != -1) {
         showCredits("", "https://atarigamer.com", "https://atarigamer.com/pages/support-atari-gamer", "Atari Gamer");
-    } else if (directory == "/mister/pce/") {
+    } else if (directory.indexOf("/pce/") != -1) {
         showCredits("EmuMovies", "https://emumovies.com", "https://emumovies.com/subscriptions/", "EmuMovies");
-    } else if (directory == "/mister/nes/") {
+    } else if (directory.indexOf("/nes/") != -1) {
+        showCredits("libretro", "https://github.com/libretro-thumbnails", "https://www.patreon.com/libretro", "libretro");
+    } else if (directory.indexOf("/gb/") != -1) {
+        showCredits("libretro", "https://github.com/libretro-thumbnails", "https://www.patreon.com/libretro", "libretro");
+    } else if (directory.indexOf("/gbc/") != -1) {
+        showCredits("libretro", "https://github.com/libretro-thumbnails", "https://www.patreon.com/libretro", "libretro");
+    } else if (directory.indexOf("/gba/") != -1) {
         showCredits("Jardavius", "https://emumovies.com", "https://emumovies.com/subscriptions/", "EmuMovies");
-    } else if (directory == "/mister/gbc/") {
+    } else if (directory.indexOf("/snes/") != -1) {
         showCredits("Jardavius", "https://emumovies.com", "https://emumovies.com/subscriptions/", "EmuMovies");
-    } else if (directory == "/mister/gba/") {
-        showCredits("Jardavius", "https://emumovies.com", "https://emumovies.com/subscriptions/", "EmuMovies");
-    } else if (directory == "/mister/snes/") {
-        showCredits("Jardavius", "https://emumovies.com", "https://emumovies.com/subscriptions/", "EmuMovies");
-    } else if (directory == "/mister/sms/") {
+    } else if (directory.indexOf("/sms/") != -1) {
         showCredits("", "https://www.smspower.org", "https://www.smspower.org/Home/Donate", "SMS Power");
-    } else if (directory == "/mister/genesis/") {
+    } else if (directory.indexOf("/genesis/") != -1) {
         showCredits("EmuMovies", "https://emumovies.com", "https://emumovies.com/subscriptions/", "EmuMovies");
-    } else if (directory == "/mister/segacd/") {
+    } else if (directory.indexOf("/segacd/") != -1) {
         showCredits("EmuMovies", "https://emumovies.com", "https://emumovies.com/subscriptions/", "EmuMovies");
-    } else if (directory == "/mister/atari2600/") {
+    } else if (directory.indexOf("/atari2600/") != -1) {
         showCredits("EmuMovies", "https://emumovies.com", "https://emumovies.com/subscriptions/", "EmuMovies");
     }
 });
@@ -76,6 +80,5 @@ function showCredits(author, url, donate, sitename) {
         creditsTarget.append(a2);
         creditsTarget.append(" to " + sitename + ".");
     }
-    creditsTarget.append(document.createElement("br"))
-    creditsTarget.append("All copyright to these images are held by the companies who developed and published these games.");
+    creditsTarget.append(" All copyright to these images are held by the companies who developed and published these games.");
 }

@@ -14,14 +14,13 @@ type HomePageData struct {
 
 func main() {
 
-	generateIndex() // always run first
-
 	generateAll := true
 	// generateMisterArcadeGames(generateAll)
 	// generateMisterNeoGeoGames(generateAll)
 	// generateMisterNESGames(generateAll)
 	// generateMisterSNESGames(generateAll)
-	generateMisterSMSGames(generateAll)
+	// generateMisterSMSGames(generateAll)
+	// generateMisterGBGames(generateAll)
 	// generateMisterGBCGames(generateAll)
 	// generateMisterGBAGames(generateAll)
 	// generateMisterGenesisGames(generateAll)
@@ -29,13 +28,17 @@ func main() {
 	// generateMisterAtari2600Games(generateAll)
 	// generateMisterPCEGames(generateAll)
 	// generateMisterLynxGames(generateAll)
+	generateMisterWonderSwanGames(generateAll)
+	generateMisterWonderSwanColorGames(generateAll)
+
+	generateIndex() // run last
 
 }
 
 func generateIndex() {
 	var tmplBuffer bytes.Buffer
-	var jsonStatFiles = []string{"arcade", "neogeo", "atari2600", "lynx", "pce", "nes", "gbc", "gba",
-		"snes", "sms", "genesis", "segacd"}
+	var jsonStatFiles = []string{"arcade", "neogeo", "atari2600", "lynx", "pce", "nes", "gb", "gbc", "gba",
+		"snes", "sms", "genesis", "segacd", "ws", "wsc"}
 	var tempStats = []Stats{}
 	for _, v := range jsonStatFiles {
 		out := Stats{}
@@ -48,8 +51,9 @@ func generateIndex() {
 	}
 
 	now := time.Now()
+	//fmt.Println(now.Format(time.RFC1123))
 	dataHomepage := HomePageData{
-		UpdatedOn: now.Format("January 06, 2006"),
+		UpdatedOn: now.Format(time.RFC1123),
 		Stats:     tempStats,
 	}
 	tmpl := template.Must(template.ParseFiles("index_layout.html", "navigation.html"))

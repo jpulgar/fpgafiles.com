@@ -14,6 +14,7 @@
         },
         "Nintendo": {
             "NES": {"shortname":"NES", "longname":"Nintendo Entertainment System", "link": "/mister/nes/a.html"},
+            "GB": {"shortname":"GB", "longname":"Game Boy", "link": "/mister/gb/a.html"},
             "GBC": {"shortname":"GBC", "longname":"Game Boy Color", "link": "/mister/gbc/a.html"},
             "GBA": {"shortname":"GBA", "longname":"Game Boy Advance", "link": "/mister/gba/a.html"},
             "SNES": {"shortname":"SNES", "longname":"Super Nintendo", "link": "/mister/snes/a.html"}
@@ -22,6 +23,10 @@
             "SMS": {"shortname":"SMS", "longname":"Master System", "link": "/mister/sms/a.html"},
             "Genesis": {"shortname":"Genesis", "longname":"Genesis / Mega Drive", "link": "/mister/genesis/a.html"},
             "Sega CD": {"shortname":"Sega CD", "longname":"Sega CD / Mega-CD", "link": "/mister/segacd/a.html"}
+        },
+        "Bandai": {
+            "WS": {"shortname":"WS", "longname":"WonderSwan", "link": "/mister/ws/a.html"},
+            "WSC": {"shortname":"WSC", "longname":"WonderSwan Color", "link": "/mister/wsc/a.html"}
         }
     }
 }

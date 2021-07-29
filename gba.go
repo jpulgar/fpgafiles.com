@@ -6,7 +6,7 @@ func generateMisterGBAGames(generate bool) {
 	gbaGameList := []string{}
 	compileMisterConsoleData(gbaTitleAdded, &gbaGameList, gbaImages, gbaVideos, "gba")
 	if generate {
-		generateMisterConsoleHTML("Game Boy Advance Games", &gbaGameList, gbaImages, gbaVideos, "gba")
+		generateMisterConsoleHTML("Game Boy Advance Games", &gbaGameList, gbaImages, gbaVideos, "gba", "game boy advance")
 	}
 }
 

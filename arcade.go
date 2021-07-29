@@ -163,19 +163,19 @@ func generateMisterArcadeHTML() {
 		for _, g := range arcadeGameList {
 			// Starting with letter
 			if strings.ToLower(g.Name[0:1]) == v {
-				temp := Game{g.SetName, g.SetName + ".png", arcadeVideos[g.SetName], g.Name + " (" + g.Year + ")"}
+				temp := Game{g.SetName, g.SetName + ".png", arcadeVideos[g.SetName], g.Name + " (" + g.Year + ")", "arcade"}
 				tempGames = append(tempGames, temp)
 			}
 			// Starting with #
 			if v == "num" {
 				if _, err := strconv.Atoi(g.Name[0:1]); err == nil {
-					temp := Game{g.SetName, g.SetName + ".png", arcadeVideos[g.SetName], g.Name + " (" + g.Year + ")"}
+					temp := Game{g.SetName, g.SetName + ".png", arcadeVideos[g.SetName], g.Name + " (" + g.Year + ")", "arcade"}
 					tempGames = append(tempGames, temp)
 				}
 			}
 			// Text List
 			if v == "textlist" {
-				temp := Game{g.SetName, g.SetName + ".png", arcadeVideos[g.SetName], g.Name + " (" + g.Year + ")"}
+				temp := Game{g.SetName, g.SetName + ".png", arcadeVideos[g.SetName], g.Name + " (" + g.Year + ")", "arcade"}
 				tempGames = append(tempGames, temp)
 			}
 		}
@@ -211,7 +211,7 @@ func generateMisterArcadeHTML() {
 		var tempGames []Game
 		for _, g := range arcadeGameList {
 			if g.Year == v {
-				temp := Game{g.SetName, g.SetName + ".png", arcadeVideos[g.SetName], g.Name + " (" + g.Year + ")"}
+				temp := Game{g.SetName, g.SetName + ".png", arcadeVideos[g.SetName], g.Name + " (" + g.Year + ")", "arcade"}
 				tempGames = append(tempGames, temp)
 			}
 		}
@@ -246,7 +246,7 @@ func generateMisterArcadeHTML() {
 		var tempGames []Game
 		for _, g := range arcadeGameList {
 			if g.Author == v {
-				temp := Game{g.SetName, g.SetName + ".png", arcadeVideos[g.SetName], g.Name + " (" + g.Year + ")"}
+				temp := Game{g.SetName, g.SetName + ".png", arcadeVideos[g.SetName], g.Name + " (" + g.Year + ")", "arcade"}
 				tempGames = append(tempGames, temp)
 			}
 		}

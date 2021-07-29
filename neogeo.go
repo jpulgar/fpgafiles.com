@@ -100,19 +100,19 @@ func generateMisterNeoGeoHTML() {
 		for _, g := range neogeoGameList {
 			// Starting with letter
 			if strings.ToLower(g.Name[0:1]) == v {
-				temp := Game{g.SetName, g.SetName + ".png", neogeoVideos[g.SetName], g.Name + " (" + g.Year + ")"}
+				temp := Game{g.SetName, g.SetName + ".png", neogeoVideos[g.SetName], g.Name + " (" + g.Year + ")", "neo geo"}
 				tempGames = append(tempGames, temp)
 			}
 			// Starting with #
 			if v == "num" {
 				if _, err := strconv.Atoi(g.Name[0:1]); err == nil {
-					temp := Game{g.SetName, g.SetName + ".png", neogeoVideos[g.SetName], g.Name + " (" + g.Year + ")"}
+					temp := Game{g.SetName, g.SetName + ".png", neogeoVideos[g.SetName], g.Name + " (" + g.Year + ")", "neo geo"}
 					tempGames = append(tempGames, temp)
 				}
 			}
 			// Text List
 			if v == "textlist" {
-				temp := Game{g.SetName, g.SetName + ".png", neogeoVideos[g.SetName], g.Name + " (" + g.Year + ")"}
+				temp := Game{g.SetName, g.SetName + ".png", neogeoVideos[g.SetName], g.Name + " (" + g.Year + ")", "neo geo"}
 				tempGames = append(tempGames, temp)
 			}
 		}

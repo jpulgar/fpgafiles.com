@@ -6,7 +6,7 @@ func generateMisterGBGames(generate bool) {
 	gbGameList := []string{}
 	compileMisterConsoleData(gbTitleAdded, &gbGameList, gbImages, gbVideos, "gb")
 	if generate {
-		generateMisterConsoleHTML("Game Boy", &gbGameList, gbImages, gbVideos, "gb")
+		generateMisterConsoleHTML("Game Boy", &gbGameList, gbImages, gbVideos, "gb", "game boy")
 	}
 }
 

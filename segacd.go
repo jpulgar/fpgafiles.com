@@ -13,7 +13,7 @@ func generateMisterSegaCDGames(generate bool) {
 	compileMisterConsoleData(segacdTitleAdded, &segacdGameList, segacdImages, segacdVideos, "segacd")
 	segacdVideoReport(&segacdGameList)
 	if generate {
-		generateMisterConsoleHTML("Sega CD Games", &segacdGameList, segacdImages, segacdVideos, "segacd")
+		generateMisterConsoleHTML("Sega CD Games", &segacdGameList, segacdImages, segacdVideos, "segacd", "sega cd")
 	}
 }
 

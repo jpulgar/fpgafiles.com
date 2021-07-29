@@ -30,10 +30,11 @@ type ListPageData struct {
 }
 
 type Game struct {
-	Page  string
-	Image string
-	Video string
-	Name  string
+	Page          string
+	Image         string
+	Video         string
+	Name          string
+	YouTubeSearch string
 }
 
 type Section struct {
@@ -121,6 +122,8 @@ func nameForFolder(folder string) string {
 		return "TurboGrafx 16 / PC Engine"
 	} else if folder == "nes" {
 		return "NES"
+	} else if folder == "gb" {
+		return "Game Boy"
 	} else if folder == "gbc" {
 		return "Game Boy Color"
 	} else if folder == "gba" {
@@ -133,11 +136,15 @@ func nameForFolder(folder string) string {
 		return "Genesis / Mega Drive"
 	} else if folder == "segacd" {
 		return "Sega CD / Mega-CD"
+	} else if folder == "ws" {
+		return "WonderSwan"
+	} else if folder == "wsc" {
+		return "WonderSwan Color"
 	}
 	return ""
 }
 
-func generateMisterConsoleHTML(listName string, gameList *[]string, images map[string]string, videos map[string]string, folderName string) {
+func generateMisterConsoleHTML(listName string, gameList *[]string, images map[string]string, videos map[string]string, folderName string, youtubesearch string) {
 
 	var tmplBuffer bytes.Buffer
 
@@ -174,19 +181,19 @@ func generateMisterConsoleHTML(listName string, gameList *[]string, images map[s
 			if len(g) > 0 {
 				// Starting with letter
 				if strings.ToLower(g[0:1]) == v {
-					temp := Game{urlSafe(g), images[g], videos[g], g}
+					temp := Game{urlSafe(g), images[g], videos[g], g, youtubesearch}
 					tempGames = append(tempGames, temp)
 				}
 				// Starting with #
 				if v == "num" {
 					if _, err := strconv.Atoi(g[0:1]); err == nil {
-						temp := Game{urlSafe(g), images[g], videos[g], g}
+						temp := Game{urlSafe(g), images[g], videos[g], g, youtubesearch}
 						tempGames = append(tempGames, temp)
 					}
 				}
 				// Text List
 				if v == "textlist" {
-					temp := Game{urlSafe(g), images[g], videos[g], g}
+					temp := Game{urlSafe(g), images[g], videos[g], g, youtubesearch}
 					tempGames = append(tempGames, temp)
 				}
 			}

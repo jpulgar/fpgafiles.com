@@ -6,7 +6,7 @@ func generateMisterGenesisGames(generate bool) {
 	genesisGameList := []string{}
 	compileMisterConsoleData(genesisTitleAdded, &genesisGameList, genesisImages, genesisVideos, "genesis")
 	if generate {
-		generateMisterConsoleHTML("Genesis Games", &genesisGameList, genesisImages, genesisVideos, "genesis")
+		generateMisterConsoleHTML("Genesis Games", &genesisGameList, genesisImages, genesisVideos, "genesis", "genesis")
 	}
 }
 
