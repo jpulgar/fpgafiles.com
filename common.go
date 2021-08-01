@@ -62,11 +62,11 @@ type Stats struct {
 
 func compileMisterConsoleData(titleAdded map[string]bool, gameList *[]string, images map[string]string, videos map[string]string, folderName string) {
 
-	for _, f := range findAllFiles("public/mister/"+folderName+"/titles", ".png", "") {
+	for _, f := range findAllFiles("public/mister/"+folderName+"/snaps", ".png", "") {
 
 		original := f
-		original = strings.Replace(original, "public/mister/"+folderName+"/titles/", "", 1)
-		f = strings.Replace(f, "public/mister/"+folderName+"/titles/", "", 1)
+		original = strings.Replace(original, "public/mister/"+folderName+"/snaps/", "", 1)
+		f = strings.Replace(f, "public/mister/"+folderName+"/snaps/", "", 1)
 		f = strings.Replace(f, ".png", "", 1)
 		if idx := strings.IndexByte(f, '('); idx >= 0 {
 			f = strings.TrimRight(f[:idx], " ")
@@ -116,6 +116,8 @@ func nameForFolder(folder string) string {
 		return "Neo Geo"
 	} else if folder == "atari2600" {
 		return "Atari 2600"
+	} else if folder == "astrocade" {
+		return "Astrocade"
 	} else if folder == "lynx" {
 		return "Lynx"
 	} else if folder == "pce" {

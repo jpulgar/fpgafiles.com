@@ -24,9 +24,10 @@
             "Genesis": {"shortname":"Genesis", "longname":"Genesis / Mega Drive", "link": "/mister/genesis/a.html"},
             "Sega CD": {"shortname":"Sega CD", "longname":"Sega CD / Mega-CD", "link": "/mister/segacd/a.html"}
         },
-        "Bandai": {
+        "Other": {
             "WS": {"shortname":"WS", "longname":"WonderSwan", "link": "/mister/ws/a.html"},
-            "WSC": {"shortname":"WSC", "longname":"WonderSwan Color", "link": "/mister/wsc/a.html"}
+            "WSC": {"shortname":"WSC", "longname":"WonderSwan Color", "link": "/mister/wsc/a.html"},
+            "Astrocade": {"shortname":"Astrocade", "longname":"Astrocade", "link": "/mister/astrocade/a.html"}
         }
     }
 }

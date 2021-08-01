@@ -21,9 +21,13 @@
       {{template "navigation.html"}}
         <div class="content">
             <h1>{{.Name}}</h1>
+            {{if (eq .FolderName "atari2600" "astrocade")}}
+            <img class="resize" src="/mister/{{.FolderName}}/snaps/{{.Image}}">
+            {{else}}
             <img class="resize" src="/mister/{{.FolderName}}/titles/{{.Image}}">
             <br/><br/>
             <img class="resize" src="/mister/{{.FolderName}}/snaps/{{.Image}}">
+            {{end}}
             <br/><br/>
             {{if .Video}}
             <div class="embed-container"><iframe src="https://www.youtube.com/embed/{{.Video}}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>

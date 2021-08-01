@@ -20,16 +20,19 @@ func main() {
 	// generateMisterNESGames(generateAll)
 	// generateMisterSNESGames(generateAll)
 	// generateMisterSMSGames(generateAll)
+	//generateMisterSG1000Games(generateAll)
+	generateMisterGameGearGames(generateAll)
 	// generateMisterGBGames(generateAll)
 	// generateMisterGBCGames(generateAll)
 	// generateMisterGBAGames(generateAll)
 	// generateMisterGenesisGames(generateAll)
 	// generateMisterSegaCDGames(generateAll)
 	// generateMisterAtari2600Games(generateAll)
+	// generateMisterAstrocadeGames(generateAll)
 	// generateMisterPCEGames(generateAll)
 	// generateMisterLynxGames(generateAll)
-	generateMisterWonderSwanGames(generateAll)
-	generateMisterWonderSwanColorGames(generateAll)
+	// generateMisterWonderSwanGames(generateAll)
+	// generateMisterWonderSwanColorGames(generateAll)
 
 	generateIndex() // run last
 
@@ -37,7 +40,7 @@ func main() {
 
 func generateIndex() {
 	var tmplBuffer bytes.Buffer
-	var jsonStatFiles = []string{"arcade", "neogeo", "atari2600", "lynx", "pce", "nes", "gb", "gbc", "gba",
+	var jsonStatFiles = []string{"arcade", "neogeo", "atari2600", "astrocade", "lynx", "pce", "nes", "gb", "gbc", "gba",
 		"snes", "sms", "genesis", "segacd", "ws", "wsc"}
 	var tempStats = []Stats{}
 	for _, v := range jsonStatFiles {

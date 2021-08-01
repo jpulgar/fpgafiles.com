@@ -57,6 +57,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
         showCredits("EmuMovies", "https://emumovies.com", "https://emumovies.com/subscriptions/", "EmuMovies");
     } else if (directory.indexOf("/atari2600/") != -1) {
         showCredits("EmuMovies", "https://emumovies.com", "https://emumovies.com/subscriptions/", "EmuMovies");
+    } else if (directory.indexOf("/astrocade/") != -1) {
+        showCredits("Antonio Paradossi", "https://www.progettosnaps.net", "https://www.paypal.com/paypalme/progettoSNAPS", "progetto-SNAPS");
     }
 });
 
