@@ -40,11 +40,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
     } else if (directory.indexOf("/pce/") != -1) {
         showCredits("EmuMovies", "https://emumovies.com", "https://emumovies.com/subscriptions/", "EmuMovies");
     } else if (directory.indexOf("/nes/") != -1) {
-        showCredits("libretro", "https://github.com/libretro-thumbnails", "https://www.patreon.com/libretro", "libretro");
+        showCredits("libretro", "https://github.com/libretro-thumbnails", "", "");
     } else if (directory.indexOf("/gb/") != -1) {
-        showCredits("libretro", "https://github.com/libretro-thumbnails", "https://www.patreon.com/libretro", "libretro");
+        showCredits("libretro", "https://github.com/libretro-thumbnails", "", "");
     } else if (directory.indexOf("/gbc/") != -1) {
-        showCredits("libretro", "https://github.com/libretro-thumbnails", "https://www.patreon.com/libretro", "libretro");
+        showCredits("libretro", "https://github.com/libretro-thumbnails", "", "");
     } else if (directory.indexOf("/gba/") != -1) {
         showCredits("Jardavius", "https://emumovies.com", "https://emumovies.com/subscriptions/", "EmuMovies");
     } else if (directory.indexOf("/snes/") != -1) {
@@ -52,6 +52,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
     } else if (directory.indexOf("/sms/") != -1) {
         showCredits("", "https://www.smspower.org", "https://www.smspower.org/Home/Donate", "SMS Power");
     } else if (directory.indexOf("/sg1000/") != -1) {
+        showCredits("", "https://www.smspower.org", "https://www.smspower.org/Home/Donate", "SMS Power");
+    } else if (directory.indexOf("/gamegear/") != -1) {
         showCredits("", "https://www.smspower.org", "https://www.smspower.org/Home/Donate", "SMS Power");
     } else if (directory.indexOf("/genesis/") != -1) {
         showCredits("EmuMovies", "https://emumovies.com", "https://emumovies.com/subscriptions/", "EmuMovies");
