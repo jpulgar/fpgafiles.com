@@ -134,6 +134,10 @@ func nameForFolder(folder string) string {
 		return "Super Nintendo"
 	} else if folder == "sms" {
 		return "Sega Master System"
+	} else if folder == "sg1000" {
+		return "Sega SG-1000"
+	} else if folder == "gamegear" {
+		return "Game Gear"
 	} else if folder == "genesis" {
 		return "Genesis / Mega Drive"
 	} else if folder == "segacd" {
@@ -400,6 +404,8 @@ func getCredit(system string) string {
 	} else if system == "snes" {
 		return "Game images from Jardavius @ <a href='https://emumovies.com'>https://emumovies.com</a><br/>Please consider <a href='https://emumovies.com/subscriptions/'>donating</a> to EmuMovies."
 	} else if system == "sms" {
+		return "Game images from <a href='https://www.smspower.org/'>https://www.smspower.org</a><br/>Please consider <a href='https://www.smspower.org/Home/Donate'>donating</a> to SMS Power."
+	} else if system == "sg1000" {
 		return "Game images from <a href='https://www.smspower.org/'>https://www.smspower.org</a><br/>Please consider <a href='https://www.smspower.org/Home/Donate'>donating</a> to SMS Power."
 	} else if system == "genesis" {
 		return "Game images from EmuMovies @ <a href='https://emumovies.com'>https://emumovies.com</a><br/>Please consider <a href='https://emumovies.com/subscriptions/'>donating</a> to EmuMovies."

@@ -37,7 +37,11 @@
                 <tbody>
                   {{range .Stats}}
                     <tr>
+                      {{if (eq .Link "sg1000")}}
+                      <td><a href="/mister/{{.Link}}/b.html">{{.Name}}</a></td>
+                      {{else}}
                       <td><a href="/mister/{{.Link}}/a.html">{{.Name}}</a></td>
+                      {{end}}
                       <td>{{.Games}} ({{.LongplayPercentage}}%)</td>
                     </tr>
                   {{end}}

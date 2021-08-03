@@ -21,6 +21,8 @@
         },
         "Sega": {
             "SMS": {"shortname":"SMS", "longname":"Master System", "link": "/mister/sms/a.html"},
+            "SG1000": {"shortname":"SG-1000", "longname":"Sega SG-1000", "link": "/mister/sg1000/b.html"},
+            "GameGear": {"shortname":"GG", "longname":"Game Gear", "link": "/mister/gamegear/b.html"},
             "Genesis": {"shortname":"Genesis", "longname":"Genesis / Mega Drive", "link": "/mister/genesis/a.html"},
             "Sega CD": {"shortname":"Sega CD", "longname":"Sega CD / Mega-CD", "link": "/mister/segacd/a.html"}
         },

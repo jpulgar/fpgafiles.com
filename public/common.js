@@ -51,6 +51,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
         showCredits("Jardavius", "https://emumovies.com", "https://emumovies.com/subscriptions/", "EmuMovies");
     } else if (directory.indexOf("/sms/") != -1) {
         showCredits("", "https://www.smspower.org", "https://www.smspower.org/Home/Donate", "SMS Power");
+    } else if (directory.indexOf("/sg1000/") != -1) {
+        showCredits("", "https://www.smspower.org", "https://www.smspower.org/Home/Donate", "SMS Power");
     } else if (directory.indexOf("/genesis/") != -1) {
         showCredits("EmuMovies", "https://emumovies.com", "https://emumovies.com/subscriptions/", "EmuMovies");
     } else if (directory.indexOf("/segacd/") != -1) {

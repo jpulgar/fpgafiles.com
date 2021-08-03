@@ -20,7 +20,7 @@ func main() {
 	// generateMisterNESGames(generateAll)
 	// generateMisterSNESGames(generateAll)
 	// generateMisterSMSGames(generateAll)
-	//generateMisterSG1000Games(generateAll)
+	// generateMisterSG1000Games(generateAll)
 	generateMisterGameGearGames(generateAll)
 	// generateMisterGBGames(generateAll)
 	// generateMisterGBCGames(generateAll)
@@ -41,7 +41,7 @@ func main() {
 func generateIndex() {
 	var tmplBuffer bytes.Buffer
 	var jsonStatFiles = []string{"arcade", "neogeo", "atari2600", "astrocade", "lynx", "pce", "nes", "gb", "gbc", "gba",
-		"snes", "sms", "genesis", "segacd", "ws", "wsc"}
+		"snes", "sms", "sg1000", "gamegear", "genesis", "segacd", "ws", "wsc"}
 	var tempStats = []Stats{}
 	for _, v := range jsonStatFiles {
 		out := Stats{}
