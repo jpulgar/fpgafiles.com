@@ -45,6 +45,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
         showCredits("libretro", "https://github.com/libretro-thumbnails", "", "");
     } else if (directory.indexOf("/gbc/") != -1) {
         showCredits("libretro", "https://github.com/libretro-thumbnails", "", "");
+    } else if (directory.indexOf("/ws/") != -1) {
+        showCredits("libretro", "https://github.com/libretro-thumbnails", "", "");
+    } else if (directory.indexOf("/wsc/") != -1) {
+        showCredits("libretro", "https://github.com/libretro-thumbnails", "", "");
+    } else if (directory.indexOf("/vectrex/") != -1) {
+        showCredits("libretro", "https://github.com/libretro-thumbnails", "", "");
     } else if (directory.indexOf("/gba/") != -1) {
         showCredits("Jardavius", "https://emumovies.com", "https://emumovies.com/subscriptions/", "EmuMovies");
     } else if (directory.indexOf("/snes/") != -1) {
@@ -62,6 +68,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
     } else if (directory.indexOf("/atari2600/") != -1) {
         showCredits("EmuMovies", "https://emumovies.com", "https://emumovies.com/subscriptions/", "EmuMovies");
     } else if (directory.indexOf("/astrocade/") != -1) {
+        showCredits("Antonio Paradossi", "https://www.progettosnaps.net", "https://www.paypal.com/paypalme/progettoSNAPS", "progetto-SNAPS");
+    } else if (directory.indexOf("/odyssey2/") != -1) {
+        showCredits("Antonio Paradossi", "https://www.progettosnaps.net", "https://www.paypal.com/paypalme/progettoSNAPS", "progetto-SNAPS");
+    } else if (directory.indexOf("/coleco/") != -1) {
         showCredits("Antonio Paradossi", "https://www.progettosnaps.net", "https://www.paypal.com/paypalme/progettoSNAPS", "progetto-SNAPS");
     }
 });

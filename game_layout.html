@@ -21,7 +21,7 @@
       {{template "navigation.html"}}
         <div class="content">
             <h1>{{.Name}}</h1>
-            {{if (eq .FolderName "atari2600" "astrocade")}}
+            {{if (eq .FolderName "atari2600" "astrocade" "odyssey2" "coleco")}}
             <img class="resize" src="/mister/{{.FolderName}}/snaps/{{.Image}}">
             {{else}}
             <img class="resize" src="/mister/{{.FolderName}}/titles/{{.Image}}">

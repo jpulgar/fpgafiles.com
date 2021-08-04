@@ -27,9 +27,12 @@
             "Sega CD": {"shortname":"Sega CD", "longname":"Sega CD / Mega-CD", "link": "/mister/segacd/a.html"}
         },
         "Other": {
+            "Astrocade": {"shortname":"Astrocade", "longname":"Astrocade", "link": "/mister/astrocade/a.html"},
+            "ColecoVision": {"shortname":"ColecoVision", "longname":"ColecoVision", "link": "/mister/coleco/a.html"},
+            "Odyssey2": {"shortname":"Odyssey2", "longname":"Odyssey2", "link": "/mister/odyssey2/a.html"},
+            "Vectrex": {"shortname":"Vectrex", "longname":"Vectrex", "link": "/mister/vectrex/a.html"},
             "WS": {"shortname":"WS", "longname":"WonderSwan", "link": "/mister/ws/a.html"},
-            "WSC": {"shortname":"WSC", "longname":"WonderSwan Color", "link": "/mister/wsc/a.html"},
-            "Astrocade": {"shortname":"Astrocade", "longname":"Astrocade", "link": "/mister/astrocade/a.html"}
+            "WSC": {"shortname":"WSC", "longname":"WonderSwan Color", "link": "/mister/wsc/a.html"}
         }
     }
 }

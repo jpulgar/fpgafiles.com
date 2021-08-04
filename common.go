@@ -118,6 +118,10 @@ func nameForFolder(folder string) string {
 		return "Atari 2600"
 	} else if folder == "astrocade" {
 		return "Astrocade"
+	} else if folder == "odyssey2" {
+		return "Odyssey2"
+	} else if folder == "coleco" {
+		return "ColecoVision"
 	} else if folder == "lynx" {
 		return "Lynx"
 	} else if folder == "pce" {
@@ -142,6 +146,8 @@ func nameForFolder(folder string) string {
 		return "Genesis / Mega Drive"
 	} else if folder == "segacd" {
 		return "Sega CD / Mega-CD"
+	} else if folder == "vectrex" {
+		return "Vectrex"
 	} else if folder == "ws" {
 		return "WonderSwan"
 	} else if folder == "wsc" {
