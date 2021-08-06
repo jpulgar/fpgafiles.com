@@ -126,6 +126,8 @@ func nameForFolder(folder string) string {
 		return "Lynx"
 	} else if folder == "pce" {
 		return "TurboGrafx 16 / PC Engine"
+	} else if folder == "pcecd" {
+		return "TurboGrafx 16 / PC Engine CD"
 	} else if folder == "nes" {
 		return "NES"
 	} else if folder == "gb" {

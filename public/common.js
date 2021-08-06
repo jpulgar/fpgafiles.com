@@ -39,6 +39,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
         showCredits("", "https://atarigamer.com", "https://atarigamer.com/pages/support-atari-gamer", "Atari Gamer");
     } else if (directory.indexOf("/pce/") != -1) {
         showCredits("EmuMovies", "https://emumovies.com", "https://emumovies.com/subscriptions/", "EmuMovies");
+    } else if (directory.indexOf("/pcecd/") != -1) {
+        showCredits("Necstasy", "https://www.necstasy.net/", "", "");
     } else if (directory.indexOf("/nes/") != -1) {
         showCredits("libretro", "https://github.com/libretro-thumbnails", "", "");
     } else if (directory.indexOf("/gb/") != -1) {

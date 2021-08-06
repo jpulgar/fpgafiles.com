@@ -10,7 +10,8 @@
             "Lynx": {"shortname":"Lynx", "longname":"Lynx", "link": "/mister/lynx/a.html"}
         },
         "NEC": {
-            "TG-16 / PCE": {"shortname":"TG-16 / PCE", "longname":"TurboGrafx 16 / PC Engine", "link": "/mister/pce/a.html"}
+            "TG-16 / PCE": {"shortname":"TG-16 / PCE", "longname":"TurboGrafx 16 / PC Engine", "link": "/mister/pce/a.html"},
+            "TG-16 / PCE CD": {"shortname":"TG-16 / PCE CD", "longname":"TurboGrafx 16 / PC Engine CD", "link": "/mister/pcecd/a.html"}
         },
         "Nintendo": {
             "NES": {"shortname":"NES", "longname":"Nintendo Entertainment System", "link": "/mister/nes/a.html"},
