@@ -11,6 +11,7 @@
         },
         "NEC": {
             "TG-16 / PCE": {"shortname":"TG-16 / PCE", "longname":"TurboGrafx 16 / PC Engine", "link": "/mister/pce/a.html"},
+            "SuperGrafx": {"shortname":"SuperGrafx", "longname":"SuperGrafx", "link": "/mister/supergrafx/textlist.html"},
             "TG-16 / PCE CD": {"shortname":"TG-16 / PCE CD", "longname":"TurboGrafx 16 / PC Engine CD", "link": "/mister/pcecd/a.html"}
         },
         "Nintendo": {

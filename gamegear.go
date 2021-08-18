@@ -1,5 +1,11 @@
 package main
 
+import (
+	"fmt"
+	"strconv"
+	"strings"
+)
+
 func generateMisterGameGearGames(generate bool) {
 	gamegearTitleAdded := make(map[string]bool)
 	gamegearImages := make(map[string]string)
@@ -11,7 +17,337 @@ func generateMisterGameGearGames(generate bool) {
 	}
 }
 
-var gamegearVideos = map[string]string{}
+func gamegearVideoReport(gameList *[]string) {
+	// Calculate Best Video Matches
+	var distZero = 0
+	var distOne = 0
+	var distTwo = 0
+	var distThree = 0
+	var distFour = 0
+	var distFive = 0
+	var distMoreThanFive = 0
+	for _, v := range *gameList {
+		// Only do this process for titles with no video
+		if gamegearVideos[v] == "" {
+
+			tempName := v
+
+			if idx := strings.IndexByte(tempName, '('); idx >= 0 {
+				tempName = strings.TrimRight(tempName[:idx], " ")
+			}
+			if strings.Contains(tempName, ", The") {
+				tempName = strings.Replace(tempName, ", The", "", 1)
+				tempName = "The " + tempName
+			}
+
+			var str1 = []rune(tempName)
+			var lowestDistance = 99
+			var lowestName = ""
+			for _, n := range gamegearLongplays {
+				temptemp := n[:strings.IndexByte(n, '|')]
+				var str2 = []rune(temptemp)
+				var tempDistance = levenshtein(str1, str2)
+				if tempDistance < lowestDistance {
+					lowestDistance = tempDistance
+					lowestName = n //temptemp
+				}
+			}
+			if lowestDistance == 0 {
+				distZero = distZero + 1
+			}
+			if lowestDistance == 1 {
+				distOne = distOne + 1
+			}
+			if lowestDistance == 2 {
+				distTwo = distTwo + 1
+			}
+			if lowestDistance == 3 {
+				distThree = distThree + 1
+			}
+			if lowestDistance == 4 {
+				distFour = distFour + 1
+			}
+			if lowestDistance == 5 {
+				distFive = distFive + 1
+			}
+			if lowestDistance > 5 {
+				distMoreThanFive = distMoreThanFive + 1
+			}
+
+			// Cycle through: <= 2, == 3, == 4, == 5, > 5
+			//  0, 1, 2 are correct
+			if lowestDistance > 3 {
+
+				//lowestName = lowestName[strings.IndexByte(lowestName, '|')+1:] // for final
+				//fmt.Println("\"" + v + "\": \"" + lowestName + "\",")          // for testing
+
+				// For the rest without matches
+				fmt.Println("\"" + v + "\": \"\",")
+				if false {
+					fmt.Println(lowestName)
+				}
+			}
+		}
+	}
+	// Reporting
+	fmt.Println("Distance 0: " + strconv.Itoa(distZero))
+	fmt.Println("Distance 1: " + strconv.Itoa(distOne))
+	fmt.Println("Distance 2: " + strconv.Itoa(distTwo))
+	fmt.Println("Distance 3: " + strconv.Itoa(distThree))
+	fmt.Println("Distance 4: " + strconv.Itoa(distFour))
+	fmt.Println("Distance 5: " + strconv.Itoa(distFive))
+	fmt.Println("Distance 5+: " + strconv.Itoa(distMoreThanFive))
+}
+
+var gamegearVideos = map[string]string{
+	"5 in One Fun Pak":                           "q0txhq5XNvc",
+	"Aerial Assault":                             "Lx0Aqsd8kJ4",
+	"Aladdin":                                    "xH1gHd_Nniw",
+	"Alien 3":                                    "mdrPKcXjpDY",
+	"Alien Syndrome":                             "jNKNYWRIbAg",
+	"Andre Agassi Tennis":                        "tt6-LgtH_PY",
+	"Arcade Classics":                            "eWOojcoLvf8",
+	"Arena - Maze of Death":                      "00QigNZUNkg",
+	"Ariel - The Little Mermaid":                 "L4DDbdUfIVk",
+	"Asterix and the Great Rescue":               "Gp-NalOTebI",
+	"Asterix and the Secret Mission":             "LRuwD2rhSLc",
+	"Ax Battler - A Legend of Golden Axe":        "YB8LyyYoUj8",
+	"Baku Baku":                                  "lPiftOXYQ7o",
+	"Barbie Super Model":                         "YTm6ZbODw0s",
+	"Bart vs. The World":                         "oc43SHm_vz4",
+	"Batter Up":                                  "XKl-I1H6TuA",
+	"Battletoads":                                "dY9fI916eH0",
+	"Berlin no Kabe - The BerlinWall":            "BVJnpWL95Q8",
+	"Bonkers Wax Up!":                            "lgvnMP23-h0",
+	"BreakThru!":                                 "",
+	"Bubble Bobble":                              "dMDLhdNnI6k",
+	"Bugs Bunny in Double Trouble":               "xi6WWlbnXJQ",
+	"Buster Fight":                               "nUt-i97cPWc",
+	"Car Licence":                                "T9azFvVLWAE",
+	"Castle of Illusion - Starring Mickey Mouse": "yn1bHWfS7kA",
+	"Cave Dude":                                  "fzw2WayDkn4",
+	"Championship Hockey":                        "GOCS3NmVwhE",
+	"Chase H.Q.":                                 "PgxhPBvPPd8",
+	"Cheese Cat-Astrophe":                        "R04v28QTzbk",
+	"Chicago Syndicate":                          "Xbbd20ikLXk",
+	"Chuck Rock II Son of Chuck":                 "Js0jX_sSJko",
+	"Chuck Rock":                                 "nSEclmPePxw",
+	"CJ Elephant Fugitive":                       "8uuZVmcE5Og",
+	"Cliffhanger":                                "DcQpU3pVuYM",
+	"Clutch Hitter":                              "y77Uwc7e_QY",
+	"Columns":                                    "CCZ_2d_oF8Y",
+	"Cool Spot":                                  "hZ-PgyXVS-w",
+	"Cosmic Spacehead":                           "juU3NGQjDVw",
+	"Crazy Faces":                                "w3rilpkKuTg",
+	"Crystal Warriors":                           "80rdRFW9rJo",
+	"Cutthroat Island":                           "N2UnYmvCJ9Q",
+	"Daffy Duck in Hollywood":                    "Mqv899cT8gg",
+	"David Robinson's Supreme Court":             "deRRZW2tnZo",
+	"Deep Duck Trouble":                          "RfCemMq4sJQ",
+	"Defenders of Oasis":                         "SeWY6Ef1GT0",
+	"Desert Strike - Return to the Gulf":         "xzGgW3_OVQE",
+	"Devilish":                                   "IF5SxPXpoM8",
+	"Dinobasher - Starring Bignose the Caveman":  "jIw5YKe_BzQ",
+	"Doraemon Waku Waku Pocket Paradise":         "SzU7v0PQS80",
+	"Double Dragon":                              "pNaa6H3fXPU&index=2",
+	"Dr. Franken":                                "lOUETFwi7Ls",
+	"Dracula":                                    "lqKzn_bD7w4",
+	"Dragon The Bruce Lee Story":                 "CAms-CTQrGs",
+	"Dropzone":                                   "TEqijl9OOQc",
+	"Dynamite Headdy":                            "jETQexromd0",
+	"Earthworm Jim":                              "1vYm_wwp02U",
+	"Ecco - The Tides of Time":                   "-uSipyHfZAg",
+	"Ecco the Dolphin":                           "fcoIUsVlNmk",
+	"Ernie Els Golf":                             "LT8z6vB1y1Y",
+	"Eternal Legend":                             "KPQ-xTNmRrk",
+	"F-15 Strike Eagle":                          "zGWDlg4sKR4",
+	"F1 - World Championship Edition":            "j1O4822Bq2I",
+	"F1":                                         "tzUwfJhtcUQ",
+	"Face Ball 2000":                             "8LDEzR73_YU",
+	"Factory Panic":                              "B8uak0W9Chc",
+	"Fatal Fury Special":                         "auRr5UIb_2Y",
+	"FIFA International Soccer":                  "vwH_ieU5Aos",
+	"FIFA Soccer 96":                             "3GQ2awwpU_c",
+	"Foreman for Real":                           "S8yLausaNjU",
+	"Fray -Shugyou hen-":                         "9dJ0N8LYYIg",
+	"Fred Couples Golf":                          "vF15CMMnFjo",
+	"Frogger":                                    "MwrB8Tzkpak",
+	"G-LOC - Air Battle":                         "",
+	"Galaga '91":                                 "WEjhBzbCIic",
+	"Gamble Panic":                               "tq2uHPojFmw",
+	"Garfield Caught in the Act":                 "",
+	"Gear Stadium Heiseiban":                     "",
+	"GG Portrait - Pai Chen":                     "4Qcddl8WAUk",
+	"GG Portrait - Yuuki Akira":                  "jtCNF7P0JGk",
+	"Godzilla - Kaijuu Daishingeki":              "",
+	"GP Rider":                                   "ts9gnl3y07A",
+	"Greendog - The Beached Surfer Dude!":        "",
+	"Halley Wars":                                "4g_9Ly3S72s&feature=plcp",
+	"Heavy weight Champ":                         "",
+	"Home Alone":                                 "",
+	"House of Tarot":                             "4zdn4h9istw",
+	"Hurricanes":                                 "QjMlgwnZPqM",
+	"Hyper Pro Yakyuu '92":                       "",
+	"Ichidant-R GG":                              "",
+	"Indiana Jones and the Last Crusade The Action Game": "",
+	"J League GG Pro Striker '94":                        "",
+	"J League Soccer Dream Eleven":                       "",
+	"James Bond 007 The Duel":                            "",
+	"James Pond 3 - Operation Starfi5h":                  "",
+	"James Pond II - Codename RoboCod":                   "",
+	"Jang Pung II":                                       "",
+	"Jeopardy! Sports Edition":                           "ZyyW3WYE13w",
+	"Jeopardy!":                                          "aANGr-uWdO0",
+	"Joe Montana Football":                               "ATjB36n0cAs",
+	"Junction":                                           "",
+	"Jungle Strike":                                      "",
+	"Jurassic Park":                                      "",
+	"Kawasaki Superbike Challenge":                       "",
+	"Kishin Douji Zenki":                                 "FbXk-RsuxCA",
+	"KLAX":                                               "",
+	"Land of Illusion - Starring Mickey Mouse":           "",
+	"Last Action Hero":                                   "",
+	"Lemmings 2 The Tribes":                              "",
+	"Lemmings":                                           "3jbiquCYOFE",
+	"Madden 96":                                          "",
+	"Madoh Monogatari II - Aruru 16-sai":                 "",
+	"Madoh Monogatari III - Kyuukyoku Joou-sama":         "",
+	"Man Overboard!":                                     "",
+	"Marble Madness":                                     "BwjQWBx6xQE",
+	"Marko's Magic Football":                             "",
+	"Micro Machines 2 Turbo Tournament":                  "0l_eTU_pCac",
+	"Micro Machines":                                     "IcVm0TnIA9c",
+	"Mighty Morphin Power Rangers":                       "HZciijt8mGg",
+	"Moldorian -Hikari to Yami no Shisutaa-":             "",
+	"Monster Truck Wars":                                 "",
+	"Mortal Kombat 3":                                    "8D-D-jTU09A",
+	"Mortal Kombat II":                                   "67tnHzcKyOM",
+	"Mortal Kombat":                                      "QKcWryFWc_s",
+	"Ms. Pac-Man":                                        "bthgJuYM6F8",
+	"Nazo Puyo 2":                                        "",
+	"Nazo Puyo Aruru no Ruu":                             "",
+	"Nazo Puyo":                                          "",
+	"NBA Action - Starring David Robinson":               "",
+	"NBA Jam T.E.":                                       "",
+	"NBA Jam":                                            "",
+	"Neko Dai Suki!":                                     "",
+	"NFL '95":                                            "",
+	"NHL Hockey":                                         "",
+	"Ninja Gaiden":                                       "mHoPEgl85iE",
+	"Ninkuu 2 -Tenkuuryuu-e no Michi-":                   "",
+	"Ninkuu Gaiden - Hiroyuki Daikatsugeki":              "",
+	"Ninkuu":                                             "E6Ysx897rrU",
+	"Nomo Hideo no World Series Baseball":                "",
+	"Off the Wall":                                       "",
+	"Olympic Gold":                                       "",
+	"Out Run Europa":                                     "x8w7WU5jwuU",
+	"Out Run":                                            "HmlsVz-ypko",
+	"Pac-Attack":                                         "",
+	"Pac-In-Time":                                        "",
+	"Pac-Man":                                            "OBVx8WgUyRo",
+	"Panzer Dragoon Mini":                                "n3C55fzpMwU",
+	"Paperboy 2":                                         "",
+	"Pengo":                                              "",
+	"Pet Club Inu Dai Suki!":                             "",
+	"Pete Sampras Tennis":                                "",
+	"PGA TOUR 96":                                        "",
+	"Pinball Dreams":                                     "Uxtj6ZW3eIw",
+	"Poker Face Paul's Gin":                              "",
+	"Poker Face Paul's Poker":                            "",
+	"Poker Face Paul's Solitaire":                        "",
+	"Popeye Beach Volley Ball":                           "",
+	"Power Drive":                                        "",
+	"Primal Rage":                                        "krLU1mWISgM",
+	"Pro Yakyuu GG League":                               "",
+	"Putt & Putter":                                      "",
+	"Puyo Puyo 2":                                        "",
+	"Puzzle Bobble":                                      "",
+	"Quest for the Shaven Yak Starring Ren Hoëk & Stimpy": "",
+	"R.B.I. Baseball '94":      "",
+	"Rastan Saga":              "",
+	"Rise of the Robots":       "1bVMt_FhubA",
+	"Ristar the Shooting Star": "",
+	"Road Rash":                "",
+	"Samurai Shodown":          "97v14F_7RxQ",
+	"Scratch Golf":             "",
+	"Sega Game Pack 4 in 1":    "",
+	"Sensible Soccer":          "",
+	"Shanghai II":              "",
+	"Shaq Fu":                  "uoVSsEaZWs8",
+	"Shining Force Gaiden -Ensei Jashin no Kuni e-": "",
+	"Shining Force Gaiden II -Jashin no Mezame-":    "",
+	"Side Pocket":                        "Wy4TlYSt1mg",
+	"Slam Dunk - Shouri-e no Starting 5": "",
+	"Slider":                             "TVL04b1iT_A",
+	"Solitaire Poker":                    "",
+	"Sonic Blast":                        "9BldSK2IllU",
+	"Sonic Chaos":                        "_5-lLhmKqug",
+	"Sonic Drift 2":                      "NZMkE1bsxwI",
+	"Sonic Drift":                        "gbfTsGuPhzU",
+	"Sonic Labyrinth":                    "97unZ7grgSc",
+	"Sonic Spinball":                     "",
+	"Sonic The Hedgehog 2":               "EYQhe5wskN0",
+	"Sonic The Hedgehog Triple Trouble":  "",
+	"Sonic The Hedgehog":                 "-D00HFMfmro",
+	"Space Harrier":                      "69ewTAnYwk8",
+	"Spirou":                             "",
+	"Sports Illustrated Championship Football & Baseball": "",
+	"Sports Trivia": "",
+	"Star Trek Generations - Beyond the Nexus":                       "",
+	"Star Trek The Next Generation - The Advanced Holodeck Tutorial": "",
+	"Star Wars":                       "06poo5MgtsQ",
+	"Street Hero":                     "",
+	"Streets of Rage II":              "BGwChG7GY0o",
+	"Streets of Rage":                 "XvyXWWdBWR0",
+	"Striker":                         "",
+	"Super Battletank":                "",
+	"Super Columns":                   "",
+	"Super Momotarou Dentetsu III":    "",
+	"Super Monaco GP II":              "",
+	"Super Monaco GP":                 "aRRZ38ZrtwM",
+	"Super Off Road":                  "",
+	"Super Tetris":                    "",
+	"Superman The Man of Steel":       "",
+	"T2 The Arcade Game":              "LDoyKgHLqgM",
+	"Tails Adventures":                "W35oJcnF7qo",
+	"Tails' Skypatrol":                "",
+	"Tant-R":                          "",
+	"Tarzan - Lord of the Jungle":     "",
+	"Tatakae! Pro Yakyuu Twin League": "",
+	"Tempo Jr.":                       "HkD-twOcRuU",
+	"Tengen World Cup Soccer":         "",
+	"Tesserae":                        "",
+	"The Chessmaster":                 "",
+	"The GG Shinobi":                  "",
+	"The Itchy & Scratchy Game":       "b3GX9GuuFsU",
+	"The Jungle Book":                 "",
+	"The Lion King":                   "uSCkqtVTH0k",
+	"The Lost World Jurassic Park":    "",
+	"The Lucky Dime Caper - Starring Donald Duck": "",
+	"The Smurfs Travel the World":                 "",
+	"The Smurfs":                                  "",
+	"The Terminator":                              "",
+	"Tintin in Tibet":                             "SxdCgjVXGYw",
+	"Torarete Tamaruka!?":                         "",
+	"Virtua Fighter Animation":                    "dIO3zco9Nl8",
+	"VR Troopers":                                 "9H-SUfoMci4",
+	"WildSnake":                                   "",
+	"Winter Olympics":                             "",
+	"Wizard Pinball":                              "Byp7nfH4T-0",
+	"Wolfchild":                                   "ouL0lGAcm8k",
+	"Wonder Boy The Dragon's Trap":                "y57T5nlqR_Q",
+	"Wonder Boy":                                  "",
+	"Woody Pop":                                   "04XANNuUccY",
+	"World Class Leader Board":                    "",
+	"World Cup USA 94":                            "VEu-tr_qStU",
+	"World Series Baseball":                       "",
+	"WWF Raw":                                     "",
+	"X-Men Mojo World":                            "",
+	"X-Terminator":                                "",
+	"Yogi Bear in Yogi Bear's Goldrush":           "",
+	"Yu Yu Hakusho II - Gekitou! Nanakyou no Tatakai": "",
+	"Zoop": "neGvWyEh4Pk",
+}
 
 var gamegearGameInfo = map[string]string{
 	"5 in One Fun Pak":                           "https://www.smspower.org/Games/5InOneFunPak-GG",
@@ -261,4 +597,157 @@ var gamegearGameInfo = map[string]string{
 	"Yogi Bear in Yogi Bear's Goldrush": "https://www.smspower.org/Games/YogiBear-GG",
 	"Yu Yu Hakusho II - Gekitou! Nanakyou no Tatakai": "https://www.smspower.org/Games/YuYuHakushoII-GG",
 	"Zoop": "https://www.smspower.org/Games/Zoop-GG",
+}
+
+var gamegearLongplays = []string{
+	"Aerial Assault|Lx0Aqsd8kJ4",
+	"Aladdin|xH1gHd_Nniw",
+	"Alien 3|mdrPKcXjpDY",
+	"Alien Syndrome|jNKNYWRIbAg",
+	"Ax Battler - A Legend of Golden Axe|YB8LyyYoUj8",
+	"Baku Baku Animal|lPiftOXYQ7o",
+	"Batman Forever|D0ShWKzNSRQ",
+	"Batman Returns|0vob7jybaD4",
+	"Battletoads|dY9fI916eH0",
+	"Berlin no Kabe|BVJnpWL95Q8",
+	"Bishoujo Senshi Sailor Moon S|yjc8L3-wwqk",
+	"Bubble Bobble|dMDLhdNnI6k",
+	"Bugs Bunny in Double Trouble|xi6WWlbnXJQ",
+	"Bust-A-Move|RR6tgYJiP2I",
+	"Buster Fight|nUt-i97cPWc",
+	"Caesars Palace|jcRJNNJ7sAM",
+	"Captain America and the Avengers|nOq9KtmJeXY",
+	"Chuck Rock|nSEclmPePxw",
+	"Chuck Rock II - Son of Chuck|Js0jX_sSJko",
+	"Cliffhanger|DcQpU3pVuYM",
+	"Columns|CCZ_2d_oF8Y",
+	"Cool Spot|hZ-PgyXVS-w",
+	"Cutthroat Island|N2UnYmvCJ9Q",
+	"Daffy Duck in Hollywood|Mqv899cT8gg",
+	"Deep Duck Trouble Starring Donald Duck|RfCemMq4sJQ",
+	"Devilish|IF5SxPXpoM8",
+	"Donald no Magical World|DiXCwJgUmUE",
+	"Double Dragon|pNaa6H3fXPU&index=2",
+	"Dr. Robotniks Mean Bean Machine|dqm6SFHOIJ4",
+	"Dragon - The Bruce Lee Story|CAms-CTQrGs",
+	"Dropzone|TEqijl9OOQc",
+	"Dunk Kids|v6CtmiNK5oo",
+	"Dynamite Headdy|jETQexromd0",
+	"Dynamte Headdy (a)|nSpjnU7wmFo",
+	"Earthworm Jim|1vYm_wwp02U",
+	"Factory Panic|B8uak0W9Chc",
+	"Fantasy Zone Gear|UXkLPKh04Wk",
+	"Fatal Fury Special|auRr5UIb_2Y",
+	"FIFA International Soccer|vwH_ieU5Aos",
+	"Fifa Soccer 96|3GQ2awwpU_c",
+	"Galaga '91|WEjhBzbCIic",
+	"Gamble Panic|tq2uHPojFmw",
+	"GG Aleste|mtTCYyXL_oE&feature=plcp",
+	"GG Doraemon - Noranosuke no Yabou|NpWnlPQqSPQ",
+	"GG Portrait - Pai Chen|4Qcddl8WAUk",
+	"GG Portrait - Yuuki Akira|jtCNF7P0JGk",
+	"GG Shinobi|0KlcleL8suw",
+	"GP Rider|ts9gnl3y07A",
+	"Griffin|9YyY_spmMXY",
+	"Gunstar Heroes|TtBotRj8JDQ",
+	"Halley Wars|4g_9Ly3S72s&feature=plcp",
+	"Hook|0I8n6ci6KW4",
+	"Hurricanes|QjMlgwnZPqM",
+	"Jang Pung II (Unlicensed)|kxbG1iduLrE",
+	"Jeopardy!|aANGr-uWdO0",
+	"Jeopardy!: Sports Edition|ZyyW3WYE13w",
+	"Joe Montana Football|ATjB36n0cAs",
+	"Kenyuu Densetsu Yaiba|rtJ0bMhRjhU",
+	"Kishin Douji Zenki|FbXk-RsuxCA",
+	"Kuni-chan no Game Tengoku Part 2|t_Dl6R4PkxE",
+	"Lemmings|3jbiquCYOFE",
+	"Lemmings 2: The Tribes (Prototype)|SDXp8SetkUY",
+	"Madou Monogatari II|p_LgWXtyukY",
+	"Madou Monogatari III|0JlaIkzNTYI",
+	"Magical Taruruuto-kun|-PNVDdY_LqU",
+	"Mappy|NqJ2bWYws_o",
+	"Marble Madness|BwjQWBx6xQE",
+	"Megaman|1BEv6TwiYcs",
+	"Mick & Mack as the Global Gladiators|iNhb89mfwGM",
+	"Mickey's Ultimate Challenge|pw90KuJRgJc",
+	"Micro Machines|IcVm0TnIA9c",
+	"Micro Machines 2: Turbo Tournament|0l_eTU_pCac",
+	"Mighty Morphin Power Rangers|HZciijt8mGg",
+	"Mighty Morphin Power Rangers: The Movie|nU-GAwnGCRs",
+	"Mortal Kombat|QKcWryFWc_s",
+	"Mortal Kombat 3|8D-D-jTU09A",
+	"Mortal Kombat II|67tnHzcKyOM",
+	"Ms. Pac-Man|bthgJuYM6F8",
+	"Ninja Gaiden|mHoPEgl85iE",
+	"Ninku|E6Ysx897rrU",
+	"Ninku 2: Tenkuuryuu e no Michi|GdqMAoDFOq8",
+	"Out Run Europa|x8w7WU5jwuU",
+	"OutRun|HmlsVz-ypko",
+	"Pac-Man|OBVx8WgUyRo",
+	"Panzer Dragoon Mini|n3C55fzpMwU",
+	"Paperboy|hyfuxcWhUQI",
+	"Paperboy II|DyxP6HH2NiQ",
+	"Phantasy Star Adventures (Fan Translation)|FoAZupv6HQE",
+	"Phantasy Star Gaiden (Fan Translation)|tiXtLQtPmu0",
+	"Pinball Dreams|Uxtj6ZW3eIw",
+	"Power Strike II|2cZs0-8zepk",
+	"Primal Rage|krLU1mWISgM",
+	"Prince of Persia|zFDyWSqkp5E",
+	"Psychic World|1-WPEzW-ML0",
+	"Rise of the Robots|1bVMt_FhubA",
+	"RoboCop 3|OU7KwA-6odM",
+	"Samurai Shodown|97v14F_7RxQ",
+	"Samurai Spirits|QMavcOIZ15k",
+	"Sassou Shounen Eiyuuden Coca-Cola Kid (Fan Translation)|YeQxYHJyt1c",
+	"Shaq Fu|uoVSsEaZWs8",
+	"Shining Force Gaiden II: Jashin no Kakusei|XubELcJU5CI",
+	"Shining Force Gaiden: Ensei - Jashin no Kuni he|2ttK14GgFK4",
+	"Shining Force Gaiden: Final Conflict (Fan Translation)|RHr_isvKMp0",
+	"Shining Force II: The Sword of Hajya|c09h7z6pBUA",
+	"Shinobi II - The Silent Fury|QKhtumandNo",
+	"Side Pocket|Wy4TlYSt1mg",
+	"Slider|TVL04b1iT_A",
+	"Sonic Blast|9BldSK2IllU",
+	"Sonic Chaos|_5-lLhmKqug",
+	"Sonic Drift|gbfTsGuPhzU",
+	"Sonic Drift 2|NZMkE1bsxwI",
+	"Sonic Labyrinth|97unZ7grgSc",
+	"Sonic the Hedgehog|-D00HFMfmro",
+	"Sonic The Hedgehog 2|EYQhe5wskN0",
+	"Sonic Triple Trouble|drcKKfWnYF8",
+	"Space Harrier|69ewTAnYwk8",
+	"Spider-Man: Return of the Sinister Six|JfZZkyk9w18",
+	"Star Wars|06poo5MgtsQ",
+	"Streets of Rage|XvyXWWdBWR0",
+	"Streets of Rage II|BGwChG7GY0o",
+	"Super Monaco GP|aRRZ38ZrtwM",
+	"Super Space Invaders|oTsj71e2dak",
+	"Super Star Wars: Return of the Jedi|20CM5W483sE",
+	"Surf Ninjas|rdwzrGYKyvo",
+	"T2 - The Arcade Game|LDoyKgHLqgM",
+	"Tails' Adventures|W35oJcnF7qo",
+	"Taito Chase H.Q.|PgxhPBvPPd8",
+	"Taz-Mania: The Search for the Lost Seabirds|Oj-7hQgtOnA",
+	"Tempo Jr.|HkD-twOcRuU",
+	"The Berenstain Bears' Camping Adventure|AmTC0GSBRoE",
+	"The Excellent Dizzy Collection|7zpP66FXr3M",
+	"The Itchy & Scratchy Game|b3GX9GuuFsU",
+	"The Lion King|uSCkqtVTH0k",
+	"The Ottifants|0YE3PJypSKY",
+	"The Simpsons: Bart vs. the Space Mutants|oc43SHm_vz4",
+	"The Simpsons: Bartman Meets Radioactive Man|mpIOEVC5VLM",
+	"Tintin in Tibet|SxdCgjVXGYw",
+	"Tom and Jerry - The Movie|7vdtFP3Duzk",
+	"Ultimate Soccer|HI1e4VIzGM0",
+	"Virtua Fighter Animation|dIO3zco9Nl8",
+	"VR Troopers|9H-SUfoMci4",
+	"Wheel of Fortune|Z3lEhgv_kEE",
+	"Wizard Pinball|Byp7nfH4T-0",
+	"Wolfchild|ouL0lGAcm8k",
+	"Wonder Boy - The Dragons Trap|y57T5nlqR_Q",
+	"Woody Pop|04XANNuUccY",
+	"World Cup Usa 94|VEu-tr_qStU",
+	"Yuu Yuu Hakusho|rYeCY7u_6ko",
+	"Yuu Yuu Hakusho II|20cH-5Ka0ew",
+	"Zool|neGvWyEh4Pk",
 }
